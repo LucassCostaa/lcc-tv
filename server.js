@@ -1,7 +1,9 @@
 const express=require('express'),path=require('path'),crypto=require('crypto');
 const app=express(),PORT=process.env.PORT||3000,APP_ID=process.env.INSTAGRAM_APP_ID,APP_SECRET=process.env.INSTAGRAM_APP_SECRET,REDIRECT_URI=process.env.INSTAGRAM_REDIRECT_URI,HOST='https://graph.instagram.com';
 let store={accessToken:null,expiresAt:0,username:null};
-app.use(express.json());app.use(express.urlencoded({extended:true}));app.use(express.static(path.join(__dirname,'public')));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(__dirname));
 function cfg(res){if(!APP_ID||!APP_SECRET||!REDIRECT_URI){res.status(500).json({error:'Servidor não configurado',message:'Preencha o .env com APP_ID, APP_SECRET e REDIRECT_URI.'});return false}return true}
 app.get('/auth/instagram',(req,res)=>{if(!cfg(res))return;const state=crypto.randomBytes(24).toString('hex');const p=new URLSearchParams({client_id:APP_ID,redirect_uri:REDIRECT_URI,response_type:'code',scope:'instagram_business_basic',state,enable_fb_login:'0',force_authentication:'1'});res.redirect('https://www.instagram.com/oauth/authorize?'+p)});
 app.get('/auth/instagram/callback',async(req,res)=>{if(req.query.error)return res.status(400).send(req.query.error_description||req.query.error);if(!cfg(res))return;try{const form=new URLSearchParams({client_id:APP_ID,client_secret:APP_SECRET,grant_type:'authorization_code',redirect_uri:REDIRECT_URI,code:req.query.code});const tr=await fetch('https://api.instagram.com/oauth/access_token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:form});const td=await tr.json();if(!tr.ok||!td.access_token)return res.status(400).send('Falha ao trocar o código por token. Veja o terminal.');store.accessToken=td.access_token;const pr=await ig('/me',{fields:'id,username,name,account_type,profile_picture_url,media_count'});store.username=pr.username;try{const lr=await fetch(`${HOST}/access_token?grant_type=ig_exchange_token&client_secret=${encodeURIComponent(APP_SECRET)}&access_token=${encodeURIComponent(store.accessToken)}`),ld=await lr.json();if(lr.ok&&ld.access_token){store.accessToken=ld.access_token;store.expiresAt=Date.now()+(ld.expires_in||5184000)*1000}}catch{}res.redirect('/painel.html?connected=1')}catch(e){console.error(e);res.status(500).send('Erro na conexão com o Instagram.')}});
@@ -9,5 +11,7 @@ async function ig(endpoint,params={}){if(!store.accessToken)throw Error('Instagr
 app.get('/api/status',(q,r)=>r.json({connected:!!store.accessToken,username:store.username,expiresAt:store.expiresAt||null}));
 app.get('/api/media',async(q,r)=>{try{const fields='id,caption,media_type,media_url,thumbnail_url,permalink,timestamp,username,like_count,comments_count,children{media_url,media_type,thumbnail_url}';r.json(await ig('/me/media',{fields,limit:Math.min(Number(q.query.limit||50),100)}))}catch(e){r.status(401).json({error:e.message})}});
 app.post('/api/disconnect',(q,r)=>{store={accessToken:null,expiresAt:0,username:null};r.json({ok:true})});
-app.get('/privacy',(q,r)=>r.sendFile(path.join(__dirname,'public/privacy.html')));app.get('/terms',(q,r)=>r.sendFile(path.join(__dirname,'public/terms.html')));app.get('/data-deletion',(q,r)=>r.sendFile(path.join(__dirname,'public/data-deletion.html')));
+app.get('/privacy',(q,r)=>r.sendFile(path.join(__dirname,'privacy.html')));
+app.get('/terms',(q,r)=>r.sendFile(path.join(__dirname,'terms.html')));
+app.get('/data-deletion',(q,r)=>r.sendFile(path.join(__dirname,'data-deletion.html')));
 app.listen(PORT,()=>console.log(`LCC TV: http://localhost:${PORT}`));
