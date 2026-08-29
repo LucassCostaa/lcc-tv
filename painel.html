@@ -1,2 +1,884 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Painel • LCC TV</title><link rel="stylesheet" href="/style.css"></head><body class="panel"><header class="paneltop"><b>LCC TV</b><a href="/">Abrir TV</a></header><section class="hero"><div><small>PAINEL DE CONTROLE</small><h1>Sua TV, alimentada pelo Instagram.</h1><p>Conecte o @lccimpressos e teste os conteúdos publicados.</p></div><a class="btn" href="/auth/instagram">Conectar Instagram</a></section><div id="status" class="status">Verificando conexão...</div><section id="grid" class="grid"></section><script>
-async function load(){let s=await fetch('/api/status').then(r=>r.json());let st=document.getElementById('status');if(!s.connected){st.innerHTML='<b>Instagram não conectado.</b> Clique em Conectar Instagram.';return}st.innerHTML='<b>Conectado:</b> @'+s.username+' <button onclick="off()">Desconectar</button>';let d=await fetch('/api/media?limit=50').then(r=>r.json());document.getElementById('grid').innerHTML=(d.data||[]).map(x=>{let src=x.media_type==='VIDEO'?x.thumbnail_url:x.media_url;return `<article><img src="${src||''}"><div><b>${x.media_type}</b><small>${new Date(x.timestamp).toLocaleString('pt-BR')}</small><p>${(x.caption||'').slice(0,120)}</p></div></article>`}).join('')}async function off(){await fetch('/api/disconnect',{method:'POST'});load()}load();</script></body></html>
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Feed TV • Painel</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+
+<body class="app-shell">
+
+  <aside class="sidebar">
+
+    <div class="brand">
+      <div class="brand-mark">
+        Feed <span>TV</span>
+      </div>
+      <small>Seu Instagram em movimento.</small>
+    </div>
+
+    <nav>
+
+      <a class="nav-item active" href="/painel.html">
+        ⌂ <span>Painel</span>
+      </a>
+
+      <a class="nav-item" href="/">
+        ▣ <span>TV ao vivo</span>
+      </a>
+
+      <a class="nav-item" href="#conteudos">
+        ▦ <span>Conteúdos</span>
+      </a>
+
+      <a class="nav-item locked" href="#playlists">
+        ☷ <span>Playlists</span>
+        <b>PRO</b>
+      </a>
+
+      <a class="nav-item locked" href="#agendamentos">
+        ◷ <span>Agendamentos</span>
+        <b>PRO</b>
+      </a>
+
+      <a class="nav-item locked" href="#tvs">
+        ▣ <span>Múltiplas TVs</span>
+        <b>PRO</b>
+      </a>
+
+      <a class="nav-item" href="#config">
+        ⚙ <span>Configurações</span>
+      </a>
+
+      <a class="nav-item" href="#planos">
+        ♛ <span>Planos</span>
+      </a>
+
+      <a class="nav-item" href="#ajuda">
+        ? <span>Ajuda</span>
+      </a>
+
+    </nav>
+
+    <div class="upgrade-card">
+      <strong>Desbloqueie o poder do plano PRO</strong>
+
+      <p>
+        Mais layouts, playlists, agendamentos,
+        múltiplas TVs e muito mais.
+      </p>
+
+      <button onclick="alert('A página de planos será adicionada na próxima etapa.')">
+        Ver planos
+      </button>
+    </div>
+
+    <div class="account-mini">
+
+      <div class="avatar" id="miniAvatar">
+        L
+      </div>
+
+      <div>
+        <strong id="miniName">
+          Sua conta
+        </strong>
+
+        <small>
+          Plano START
+        </small>
+      </div>
+
+    </div>
+
+    <button
+      class="exit-btn"
+      onclick="window.location.href='/'">
+      ↪ Sair
+    </button>
+
+  </aside>
+
+
+  <main class="dashboard">
+
+    <!-- CABEÇALHO -->
+
+    <section class="welcome-card">
+
+      <div>
+
+        <span class="eyebrow">
+          PAINEL DE CONTROLE
+        </span>
+
+        <h1>
+          Bem-vindo ao Feed TV! 👋
+        </h1>
+
+        <p>
+          Conecte seu Instagram e transforme seu conteúdo
+          em uma experiência incrível na sua TV.
+        </p>
+
+      </div>
+
+      <div class="plan-pill">
+
+        <small>
+          Plano atual
+        </small>
+
+        <strong>
+          START <i></i>
+        </strong>
+
+      </div>
+
+      <button
+        class="outline-btn"
+        onclick="alert('Upgrade será implementado na etapa de assinaturas.')">
+
+        Upgrade
+
+      </button>
+
+    </section>
+
+
+    <!-- INSTAGRAM -->
+
+    <section class="profile-card">
+
+      <div class="profile-avatar-wrap">
+
+        <div
+          class="profile-avatar"
+          id="profileAvatar">
+
+          LCC
+
+        </div>
+
+        <div class="ig-badge">
+          ◎
+        </div>
+
+      </div>
+
+
+      <div class="profile-info">
+
+        <div class="profile-title">
+
+          <h2 id="profileName">
+            Instagram
+          </h2>
+
+          <span class="connected">
+            ● Conectado
+          </span>
+
+        </div>
+
+
+        <div
+          class="handle"
+          id="profileHandle">
+
+          @instagram
+
+        </div>
+
+
+        <div class="stats">
+
+          <div>
+            <strong id="mediaCount">
+              —
+            </strong>
+
+            <span>
+              publicações
+            </span>
+          </div>
+
+          <div>
+            <strong>
+              —
+            </strong>
+
+            <span>
+              seguidores
+            </span>
+          </div>
+
+          <div>
+            <strong>
+              —
+            </strong>
+
+            <span>
+              seguindo
+            </span>
+          </div>
+
+        </div>
+
+
+        <small id="connectedAt">
+          Conectado ao Feed TV
+        </small>
+
+      </div>
+
+
+      <button
+        class="disconnect"
+        onclick="disconnectInstagram()">
+
+        ↪ Desconectar
+
+      </button>
+
+    </section>
+
+
+    <!-- CONTEÚDOS -->
+
+    <section
+      class="content-card"
+      id="conteudos">
+
+      <div class="tabs">
+
+        <button
+          class="tab active"
+          data-filter="all">
+
+          Posts e Reels
+
+        </button>
+
+        <button
+          class="tab"
+          data-filter="VIDEO">
+
+          Reels
+
+        </button>
+
+        <button
+          class="tab"
+          data-filter="CAROUSEL_ALBUM">
+
+          Carrosséis
+
+        </button>
+
+        <span class="updated">
+          ↻ Atualizado agora há pouco
+        </span>
+
+      </div>
+
+
+      <div
+        id="grid"
+        class="content-grid">
+
+        <div class="loading">
+          Carregando conteúdos...
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- COMO FUNCIONA -->
+
+    <section class="how-card">
+
+      <div class="section-title">
+        COMO FUNCIONA NA TV
+      </div>
+
+
+      <div class="steps">
+
+        <div class="step">
+          <b>1</b>
+          <strong>Perfil aberto na TV</strong>
+          <div class="mini-screen"></div>
+        </div>
+
+        <div class="step">
+          <b>2</b>
+          <strong>Cursor aparece</strong>
+          <div class="mini-screen cursor-demo"></div>
+        </div>
+
+        <div class="step">
+          <b>3</b>
+          <strong>Clica no post</strong>
+          <div class="mini-screen cursor-demo"></div>
+        </div>
+
+        <div class="step">
+          <b>4</b>
+          <strong>Post abre em destaque</strong>
+          <div class="mini-screen featured-demo"></div>
+        </div>
+
+        <div class="step">
+          <b>5</b>
+          <strong>Retorna ao perfil</strong>
+          <div class="mini-screen"></div>
+        </div>
+
+        <div class="step">
+          <b>6</b>
+          <strong>Vai para o próximo</strong>
+          <div class="mini-screen cursor-demo"></div>
+        </div>
+
+      </div>
+
+
+      <p class="how-footer">
+        ↻ Navegação automática e contínua pelos seus
+        posts, reels e carrosséis.
+      </p>
+
+    </section>
+
+  </main>
+
+
+  <!-- CONFIGURAÇÕES -->
+
+  <aside
+    class="settings-panel"
+    id="config">
+
+    <h2>
+      CONFIGURAÇÕES DA TV
+    </h2>
+
+
+    <label>
+      ORIENTAÇÃO
+    </label>
+
+
+    <div class="segmented">
+
+      <button
+        class="selected"
+        data-orientation="landscape">
+
+        ▣ &nbsp; Horizontal
+
+      </button>
+
+      <button
+        data-orientation="portrait">
+
+        ▣ &nbsp; Vertical
+
+      </button>
+
+    </div>
+
+
+    <label>
+      EXPERIÊNCIA DE EXIBIÇÃO
+    </label>
+
+
+    <button class="choice selected">
+
+      Experiência Instagram
+
+      <span>
+        PADRÃO ★
+      </span>
+
+    </button>
+
+
+    <button
+      class="choice locked-choice"
+      onclick="lockedFeature('PLUS')">
+
+      Mosaico
+
+      <span>
+        PLUS 🔒
+      </span>
+
+    </button>
+
+
+    <button
+      class="choice locked-choice"
+      onclick="lockedFeature('PLUS')">
+
+      Apresentação
+
+      <span>
+        PLUS 🔒
+      </span>
+
+    </button>
+
+
+    <label>
+      LEGENDAS
+    </label>
+
+
+    <div class="toggle-row">
+
+      <span>
+        Mostrar legendas
+      </span>
+
+      <input
+        id="showCaptions"
+        type="checkbox"
+        checked>
+
+    </div>
+
+
+    <div class="slider-row">
+
+      <span>
+        A
+      </span>
+
+      <input
+        id="captionSize"
+        type="range"
+        min="16"
+        max="34"
+        value="24">
+
+      <span>
+        A
+      </span>
+
+    </div>
+
+
+    <div class="locked-line">
+
+      🔒 Posição da legenda
+
+      <b>
+        PRO
+      </b>
+
+    </div>
+
+
+    <label>
+      TEMPO DE EXIBIÇÃO
+    </label>
+
+
+    <div class="time-options">
+
+      <button data-time="5">
+        5s
+      </button>
+
+      <button
+        class="selected"
+        data-time="10">
+
+        10s
+
+      </button>
+
+      <button data-time="15">
+        15s
+      </button>
+
+      <button data-time="30">
+        30s
+      </button>
+
+    </div>
+
+
+    <div class="premium-box">
+
+      <strong>
+        🔒 Mais recursos disponíveis
+        nos planos PLUS e PRO
+      </strong>
+
+      <small>
+        Desbloqueie layouts, playlists,
+        agendamentos e muito mais.
+      </small>
+
+    </div>
+
+
+    <button
+      class="open-tv"
+      onclick="openTV()">
+
+      ▣ &nbsp; Abrir TV agora
+
+    </button>
+
+  </aside>
+
+
+<script>
+
+let media = [];
+
+let activeFilter = 'all';
+
+
+async function loadDashboard(){
+
+  try{
+
+    const status =
+      await fetch('/api/status')
+      .then(r => r.json());
+
+
+    if(!status.connected){
+
+      document.getElementById('grid').innerHTML =
+        '<div class="loading">' +
+        'Instagram não conectado. ' +
+        '<a href="/auth/instagram">Conectar agora</a>' +
+        '</div>';
+
+      return;
+
+    }
+
+
+    const username =
+      status.username || 'instagram';
+
+
+    document.getElementById(
+      'profileHandle'
+    ).textContent =
+      '@' + username;
+
+
+    document.getElementById(
+      'profileName'
+    ).textContent =
+      username;
+
+
+    document.getElementById(
+      'miniName'
+    ).textContent =
+      username;
+
+
+    document.getElementById(
+      'miniAvatar'
+    ).textContent =
+      username
+        .slice(0,1)
+        .toUpperCase();
+
+
+    const data =
+      await fetch('/api/media?limit=50')
+      .then(r => r.json());
+
+
+    media = data.data || [];
+
+
+    document.getElementById(
+      'mediaCount'
+    ).textContent =
+      media.length;
+
+
+    renderGrid();
+
+  }catch(err){
+
+    document.getElementById(
+      'grid'
+    ).innerHTML =
+      '<div class="loading">' +
+      'Não foi possível carregar os conteúdos.' +
+      '</div>';
+
+  }
+
+}
+
+
+function renderGrid(){
+
+  const items =
+    activeFilter === 'all'
+      ? media
+      : media.filter(
+          x => x.media_type === activeFilter
+        );
+
+
+  if(!items.length){
+
+    document.getElementById(
+      'grid'
+    ).innerHTML =
+      '<div class="loading">' +
+      'Nenhum conteúdo encontrado.' +
+      '</div>';
+
+    return;
+
+  }
+
+
+  document.getElementById(
+    'grid'
+  ).innerHTML = items.map(x => {
+
+    const src =
+      x.media_type === 'VIDEO'
+        ? x.thumbnail_url
+        : x.media_url;
+
+
+    const type =
+      x.media_type === 'VIDEO'
+        ? 'REEL'
+        : x.media_type === 'CAROUSEL_ALBUM'
+          ? 'CARROSSEL'
+          : 'POST';
+
+
+    return `
+
+      <article class="content-item">
+
+        <div class="media-thumb">
+
+          <img
+            src="${src || ''}"
+            alt="">
+
+          <span class="type-badge">
+            ${type}
+          </span>
+
+        </div>
+
+        <div class="content-meta">
+
+          <strong>
+            ${new Date(x.timestamp)
+              .toLocaleDateString('pt-BR')}
+          </strong>
+
+          <p>
+            ${escapeHtml(
+              (x.caption || '').slice(0,90)
+            )}
+          </p>
+
+        </div>
+
+      </article>
+
+    `;
+
+  }).join('');
+
+}
+
+
+function escapeHtml(text){
+
+  return text.replace(
+    /[&<>"']/g,
+    m => ({
+      '&':'&amp;',
+      '<':'&lt;',
+      '>':'&gt;',
+      '"':'&quot;',
+      "'":'&#039;'
+    }[m])
+  );
+
+}
+
+
+async function disconnectInstagram(){
+
+  await fetch(
+    '/api/disconnect',
+    {
+      method:'POST'
+    }
+  );
+
+  loadDashboard();
+
+}
+
+
+function lockedFeature(plan){
+
+  alert(
+    'Esse recurso estará disponível no plano ' +
+    plan +
+    '.'
+  );
+
+}
+
+
+function openTV(){
+
+  const orientation =
+    document
+      .querySelector(
+        '[data-orientation].selected'
+      )
+      ?.dataset.orientation
+      || 'landscape';
+
+
+  const showCaptions =
+    document.getElementById(
+      'showCaptions'
+    ).checked;
+
+
+  const captionSize =
+    document.getElementById(
+      'captionSize'
+    ).value;
+
+
+  const time =
+    document
+      .querySelector(
+        '[data-time].selected'
+      )
+      ?.dataset.time
+      || '10';
+
+
+  const url =
+    `/?orientation=${orientation}` +
+    `&captions=${showCaptions ? '1' : '0'}` +
+    `&captionSize=${captionSize}` +
+    `&time=${time}`;
+
+
+  window.open(
+    url,
+    '_blank'
+  );
+
+}
+
+
+document
+  .querySelectorAll('[data-filter]')
+  .forEach(btn => {
+
+    btn.addEventListener(
+      'click',
+      () => {
+
+        document
+          .querySelectorAll('[data-filter]')
+          .forEach(b =>
+            b.classList.remove('active')
+          );
+
+
+        btn.classList.add('active');
+
+
+        activeFilter =
+          btn.dataset.filter;
+
+
+        renderGrid();
+
+      }
+    );
+
+  });
+
+
+document
+  .querySelectorAll('[data-orientation]')
+  .forEach(btn => {
+
+    btn.addEventListener(
+      'click',
+      () => {
+
+        document
+          .querySelectorAll('[data-orientation]')
+          .forEach(b =>
+            b.classList.remove('selected')
+          );
+
+
+        btn.classList.add('selected');
+
+      }
+    );
+
+  });
+
+
+document
+  .querySelectorAll('[data-time]')
+  .forEach(btn => {
+
+    btn.addEventListener(
+      'click',
+      () => {
+
+        document
+          .querySelectorAll('[data-time]')
+          .forEach(b =>
+            b.classList.remove('selected')
+          );
+
+
+        btn.classList.add('selected');
+
+      }
+    );
+
+  });
+
+
+loadDashboard();
+
+</script>
+
+</body>
+</html>
