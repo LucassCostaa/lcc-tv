@@ -111,6 +111,9 @@ app.get('/auth/instagram/callback', async (req, res) => {
 
   try {
     console.log('Código recebido. Trocando por token...');
+console.log('DEBUG APP_ID:', APP_ID);
+console.log('DEBUG REDIRECT_URI:', REDIRECT_URI);
+console.log('DEBUG CODE recebido:', !!code);
 
     // --------------------------------------------------------
     // Troca o CODE pelo ACCESS TOKEN
