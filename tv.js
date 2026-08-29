@@ -1,90 +1,126 @@
 let media = [];
-let index = 0;
+
+let profile = null;
+
+let currentIndex = 0;
+
 let timer = null;
 
-const params = new URLSearchParams(window.location.search);
+let profileContainer = null;
+
+let returningToProfile = false;
+
 
 const settings = {
-  orientation:
-    params.get("orientation") || "landscape",
 
-  captions:
-    params.get("captions") !== "0",
+  time: 8,
 
-  captionSize:
-    Number(params.get("captionSize") || 24),
+  captions: true,
 
-  time:
-    Number(params.get("time") || 10)
+  captionSize: 22
+
 };
 
 
 const root =
-  document.getElementById("tvRoot");
+  document.getElementById(
+    'tvRoot'
+  );
 
 const cursor =
-  document.getElementById("cursor");
+  document.getElementById(
+    'cursor'
+  );
 
 const progress =
-  document.getElementById("progress");
+  document.getElementById(
+    'progress'
+  );
 
 const count =
-  document.getElementById("count");
+  document.getElementById(
+    'count'
+  );
 
-const tvHandle =
-  document.getElementById("tvHandle");
 
+// ============================================================
+// UTILITÁRIO
+// ============================================================
 
-/* =========================================================
-   ORIENTAÇÃO
-========================================================= */
+function escapeHtml(text) {
 
-if (
-  settings.orientation === "portrait"
-) {
+  return String(text || '')
+    .replace(
+      /[&<>"']/g,
+      character => ({
 
-  document.body.classList.add("portrait");
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+
+      }[character])
+    );
 
 }
 
 
-/* =========================================================
-   CARREGAR INSTAGRAM
-========================================================= */
+// ============================================================
+// CARREGAR PERFIL
+// ============================================================
 
-async function loadInstagram() {
+async function loadProfile() {
 
   try {
 
-    const status =
-      await fetch("/api/status")
-        .then(response =>
-          response.json()
-        );
-
-
-    if (!status.connected) {
-
-      showMessage(
-        "Instagram não conectado."
+    const response =
+      await fetch(
+        '/api/profile'
       );
 
-      return;
+
+    if (!response.ok) {
+
+      throw new Error(
+        'Perfil indisponível'
+      );
 
     }
 
 
-    const username =
-      status.username || "instagram";
+    profile =
+      await response.json();
 
 
-    tvHandle.textContent =
-      "@" + username;
+    return true;
 
+
+  } catch (error) {
+
+    console.error(
+      'Erro no perfil:',
+      error
+    );
+
+    return false;
+
+  }
+
+}
+
+
+// ============================================================
+// CARREGAR POSTS
+// ============================================================
+
+async function loadMedia() {
+
+  try {
 
     const response =
       await fetch(
-        "/api/media?limit=50"
+        '/api/media?limit=100'
       );
 
 
@@ -96,187 +132,277 @@ async function loadInstagram() {
       (data.data || [])
         .filter(item =>
           [
-            "IMAGE",
-            "VIDEO",
-            "CAROUSEL_ALBUM"
+            'IMAGE',
+            'VIDEO',
+            'CAROUSEL_ALBUM'
           ].includes(
             item.media_type
           )
         );
 
 
-    if (!media.length) {
-
-      showMessage(
-        "Nenhum conteúdo disponível."
-      );
-
-      return;
-
-    }
-
-
-    if (
-      index >= media.length
-    ) {
-
-      index = 0;
-
-    }
-
-
-    showProfile();
+    return true;
 
 
   } catch (error) {
 
     console.error(
-      "Erro ao carregar Instagram:",
+      'Erro nas mídias:',
       error
     );
 
-
-    showMessage(
-      "Não foi possível carregar o Instagram."
-    );
+    return false;
 
   }
 
 }
 
 
-/* =========================================================
-   MENSAGEM
-========================================================= */
+// ============================================================
+// INICIAR
+// ============================================================
 
-function showMessage(message) {
+async function start() {
 
-  root.innerHTML = `
+  const profileOK =
+    await loadProfile();
 
-    <div style="
-      text-align:center;
-      color:#aaa;
-      font-size:24px;
-    ">
 
-      <strong
-        style="
-          display:block;
-          color:white;
-          margin-bottom:10px;
-        "
-      >
-        Feed TV
-      </strong>
+  const mediaOK =
+    await loadMedia();
 
-      ${escapeHtml(message)}
 
-    </div>
+  if (
+    !profileOK ||
+    !mediaOK ||
+    !media.length
+  ) {
 
-  `;
+    showEmpty();
+
+    return;
+
+  }
+
+
+  currentIndex = 0;
+
+  showProfile();
 
 }
 
 
-/* =========================================================
-   PERFIL
-========================================================= */
+// ============================================================
+// PERFIL
+// ============================================================
 
 function showProfile() {
 
   clearTimeout(timer);
 
-  cursor.style.display = "none";
+  cursor.style.display =
+    'none';
 
-  progress.style.width = "0";
+
+  const name =
+    profile?.name ||
+    profile?.username ||
+    'Instagram';
 
 
   const username =
-    tvHandle.textContent
-      .replace("@", "");
+    profile?.username ||
+    'instagram';
 
 
-  /*
-    Pegamos os primeiros 8 conteúdos.
-  */
+  const bio =
+    profile?.biography ||
+    '';
 
-  const visible =
-    media.slice(0, 8);
+
+  const avatar =
+    profile?.profile_picture_url ||
+    '';
+
+
+  const followers =
+    formatNumber(
+      profile?.followers_count
+    );
+
+
+  const following =
+    formatNumber(
+      profile?.follows_count
+    );
+
+
+  const posts =
+    formatNumber(
+      profile?.media_count ||
+      media.length
+    );
 
 
   root.innerHTML = `
 
-    <section class="tv-profile">
+    <section
+      class="instagram-screen"
+      id="instagramScreen">
 
-      <div class="tv-profile-head">
-
-        <div class="tv-profile-avatar">
-
-          ${escapeHtml(
-            username
-              .slice(0, 3)
-              .toUpperCase()
-          )}
-
-        </div>
+      <div
+        class="instagram-scroll"
+        id="instagramScroll">
 
 
-        <div>
+        <!-- CABEÇALHO -->
 
-          <h1 class="tv-profile-name">
-
-            @${escapeHtml(username)}
-
-          </h1>
+        <header
+          class="instagram-profile-header">
 
 
-          <div class="tv-profile-sub">
+          <div
+            class="instagram-avatar">
 
-            Conteúdo atualizado automaticamente
+            ${
+              avatar
+
+                ? `
+                  <img
+                    src="${avatar}"
+                    alt="">
+                `
+
+                : `
+                  <span>
+                    ${escapeHtml(
+                      username
+                        .slice(0, 2)
+                        .toUpperCase()
+                    )}
+                  </span>
+                `
+            }
 
           </div>
 
+
+          <div
+            class="instagram-profile-info">
+
+
+            <div
+              class="instagram-name-row">
+
+              <h1>
+                ${escapeHtml(name)}
+              </h1>
+
+              <span
+                class="verified-dot">
+                ✓
+              </span>
+
+            </div>
+
+
+            <div
+              class="instagram-username">
+
+              @${escapeHtml(username)}
+
+            </div>
+
+
+            <div
+              class="instagram-stats">
+
+              <span>
+                <strong>
+                  ${posts}
+                </strong>
+                publicações
+              </span>
+
+              <span>
+                <strong>
+                  ${followers}
+                </strong>
+                seguidores
+              </span>
+
+              <span>
+                <strong>
+                  ${following}
+                </strong>
+                seguindo
+              </span>
+
+            </div>
+
+
+            ${
+              bio
+
+                ? `
+                  <div
+                    class="instagram-bio">
+
+                    ${escapeHtml(bio)}
+
+                  </div>
+                `
+
+                : ''
+            }
+
+
+          </div>
+
+        </header>
+
+
+        <!-- DESTAQUES -->
+
+        <div
+          class="instagram-highlights">
+
+          ${createHighlights()}
+
         </div>
 
-      </div>
+
+        <!-- BARRA DE NAVEGAÇÃO -->
+
+        <div
+          class="instagram-tabs">
+
+          <span
+            class="active">
+            ▦
+          </span>
+
+          <span>
+            ▶
+          </span>
+
+          <span>
+            ⌁
+          </span>
+
+        </div>
 
 
-      <div class="tv-grid">
+        <!-- FEED -->
 
-        ${visible.map(
-          (item, position) => {
+        <div
+          class="instagram-grid"
+          id="instagramGrid">
 
-            const image =
-              item.media_type === "VIDEO"
-                ? item.thumbnail_url
-                : item.media_url;
+          ${createGrid()}
 
+        </div>
 
-            return `
-
-              <div
-                class="
-                  tv-grid-item
-                  ${
-                    position === 0
-                      ? "active"
-                      : ""
-                  }
-                "
-                data-position="${position}"
-              >
-
-                <img
-                  src="${image || ""}"
-                  alt=""
-                >
-
-              </div>
-
-            `;
-
-          }
-        ).join("")}
 
       </div>
 
@@ -285,120 +411,383 @@ function showProfile() {
   `;
 
 
+  profileContainer =
+    document.getElementById(
+      'instagramScroll'
+    );
+
+
   count.textContent =
-    `${index + 1} / ${media.length}`;
+    `${currentIndex + 1} / ${media.length}`;
 
 
   /*
-    Dá um pequeno tempo para
-    o perfil aparecer antes
-    do cursor entrar.
+    Pequeno tempo para o perfil
+    aparecer antes do cursor.
   */
 
   setTimeout(
-    animateCursor,
-    900
+    () => moveCursorToCurrentPost(),
+    1100
   );
 
 }
 
 
-/* =========================================================
-   CURSOR
-========================================================= */
+// ============================================================
+// DESTAQUES
+// ============================================================
 
-function animateCursor() {
+function createHighlights() {
 
-  const target =
+  /*
+    A API atual usada no projeto
+    não entrega os destaques do
+    Instagram nesse fluxo.
+
+    Então deixamos a área visual
+    preparada para eles e usamos
+    alguns conteúdos recentes como
+    capas provisórias.
+
+    Depois podemos conectar uma
+    fonte específica de Highlights.
+  */
+
+  const covers =
+    media.slice(0, 5);
+
+
+  const labels = [
+    'Novidades',
+    'Projetos',
+    'Produtos',
+    'Bastidores',
+    'Clientes'
+  ];
+
+
+  return covers
+    .map(
+      (item, index) => {
+
+        const src =
+          item.media_type ===
+          'VIDEO'
+
+            ? item.thumbnail_url
+
+            : item.media_url;
+
+
+        return `
+
+          <div
+            class="highlight">
+
+            <div
+              class="highlight-circle">
+
+              <img
+                src="${src || ''}"
+                alt="">
+
+            </div>
+
+            <span>
+              ${labels[index]}
+            </span>
+
+          </div>
+
+        `;
+
+      }
+    )
+    .join('');
+
+}
+
+
+// ============================================================
+// GRID
+// ============================================================
+
+function createGrid() {
+
+  return media
+    .map(
+      (item, index) => {
+
+        const src =
+          item.media_type ===
+          'VIDEO'
+
+            ? item.thumbnail_url
+
+            : item.media_url;
+
+
+        const type =
+          item.media_type ===
+          'VIDEO'
+
+            ? '▶'
+
+            : item.media_type ===
+              'CAROUSEL_ALBUM'
+
+              ? '▧'
+
+              : '';
+
+
+        return `
+
+          <div
+            class="instagram-post"
+            data-index="${index}">
+
+
+            <img
+              src="${src || ''}"
+              alt="">
+
+
+            ${
+              type
+
+                ? `
+                  <span
+                    class="post-type">
+                    ${type}
+                  </span>
+                `
+
+                : ''
+            }
+
+
+          </div>
+
+        `;
+
+      }
+    )
+    .join('');
+
+}
+
+
+// ============================================================
+// CURSOR
+// ============================================================
+
+async function moveCursorToCurrentPost() {
+
+  if (!profileContainer) {
+    return;
+  }
+
+
+  const post =
     document.querySelector(
-      ".tv-grid-item.active"
+      `.instagram-post[data-index="${currentIndex}"]`
     );
 
 
-  if (!target) {
-
-    showFeature();
+  if (!post) {
 
     return;
 
   }
 
 
+  /*
+    Se o post não estiver visível,
+    fazemos o scroll automático.
+  */
+
+  await ensurePostVisible(
+    post
+  );
+
+
   const rectangle =
-    target.getBoundingClientRect();
+    post.getBoundingClientRect();
+
+
+  const x =
+    rectangle.left +
+    rectangle.width * 0.68;
+
+
+  const y =
+    rectangle.top +
+    rectangle.height * 0.68;
 
 
   cursor.style.left =
-    (
-      rectangle.left +
-      rectangle.width * 0.70
-    ) + "px";
+    `${x}px`;
 
 
   cursor.style.top =
-    (
-      rectangle.top +
-      rectangle.height * 0.70
-    ) + "px";
+    `${y}px`;
 
 
   cursor.style.display =
-    "block";
+    'block';
 
 
   /*
-    Pequena pausa antes
-    do clique.
+    Pequena pausa como se a pessoa
+    estivesse movimentando o mouse.
   */
 
-  setTimeout(() => {
-
-    cursor.classList.add(
-      "clicking"
-    );
+  await wait(750);
 
 
-    setTimeout(() => {
-
-      cursor.classList.remove(
-        "clicking"
-      );
+  cursor.classList.add(
+    'clicking'
+  );
 
 
-      showFeature();
+  await wait(250);
 
-    }, 250);
 
-  }, 700);
+  cursor.classList.remove(
+    'clicking'
+  );
+
+
+  cursor.style.display =
+    'none';
+
+
+  openPost(
+    media[currentIndex]
+  );
 
 }
 
 
-/* =========================================================
-   ABRIR POST
-========================================================= */
+// ============================================================
+// SCROLL
+// ============================================================
 
-function showFeature() {
+function ensurePostVisible(
+  post
+) {
+
+  return new Promise(
+    resolve => {
+
+      const container =
+        profileContainer;
+
+
+      const top =
+        post.offsetTop;
+
+
+      const bottom =
+        top +
+        post.offsetHeight;
+
+
+      const visibleTop =
+        container.scrollTop;
+
+
+      const visibleBottom =
+        visibleTop +
+        container.clientHeight;
+
+
+      const margin =
+        container.clientHeight *
+        0.18;
+
+
+      if (
+        top >=
+          visibleTop + margin &&
+        bottom <=
+          visibleBottom - margin
+      ) {
+
+        resolve();
+
+        return;
+
+      }
+
+
+      let destination;
+
+
+      if (
+        top <
+        visibleTop
+      ) {
+
+        destination =
+          Math.max(
+            0,
+            top -
+            container.clientHeight *
+              0.18
+          );
+
+      } else {
+
+        destination =
+          Math.min(
+            container.scrollHeight -
+              container.clientHeight,
+
+            top -
+              container.clientHeight *
+                0.18
+          );
+
+      }
+
+
+      container.scrollTo({
+
+        top:
+          destination,
+
+        behavior:
+          'smooth'
+
+      });
+
+
+      setTimeout(
+        resolve,
+        850
+      );
+
+    }
+  );
+
+}
+
+
+// ============================================================
+// ABRIR POST
+// ============================================================
+
+function openPost(item) {
 
   clearTimeout(timer);
 
-  cursor.style.display = "none";
-
-
-  const item =
-    media[index];
-
-
-  /*
-    Se for carrossel,
-    usamos os filhos.
-  */
 
   const children =
-    item.children &&
-    item.children.data
-      ? item.children.data
-      : [];
+    item.children?.data ||
+    [];
 
 
   let slides = [];
@@ -406,21 +795,23 @@ function showFeature() {
 
   if (
     item.media_type ===
-      "CAROUSEL_ALBUM" &&
+      'CAROUSEL_ALBUM' &&
     children.length
   ) {
 
     slides =
-      children.map(child => ({
+      children.map(
+        child => ({
 
-        type:
-          child.media_type,
+          type:
+            child.media_type,
 
-        src:
-          child.media_url ||
-          child.thumbnail_url
+          src:
+            child.media_url ||
+            child.thumbnail_url
 
-      }));
+        })
+      );
 
   } else {
 
@@ -442,7 +833,7 @@ function showFeature() {
   }
 
 
-  playSlide(
+  showSlide(
     item,
     slides,
     0
@@ -451,11 +842,11 @@ function showFeature() {
 }
 
 
-/* =========================================================
-   EXECUTAR SLIDE
-========================================================= */
+// ============================================================
+// SLIDE
+// ============================================================
 
-function playSlide(
+function showSlide(
   item,
   slides,
   slideIndex
@@ -466,7 +857,7 @@ function playSlide(
     slides.length
   ) {
 
-    finishFeature();
+    returnToProfile();
 
     return;
 
@@ -479,54 +870,77 @@ function playSlide(
 
   root.innerHTML = `
 
-    <section class="tv-feature">
-
-      <div class="feature-meta">
-
-        <span>
-          ${escapeHtml(
-            tvHandle.textContent
-          )}
-        </span>
+    <section
+      class="instagram-post-viewer">
 
 
-        <span>
+      <div
+        class="viewer-top">
+
+        <div
+          class="viewer-account">
+
+          ${
+            profile?.profile_picture_url
+
+              ? `
+                <img
+                  src="${profile.profile_picture_url}"
+                  alt="">
+              `
+
+              : ''
+          }
+
+          <span>
+            @${escapeHtml(
+              profile?.username ||
+              'instagram'
+            )}
+          </span>
+
+        </div>
+
+
+        <div>
 
           ${
             slides.length > 1
               ? `${slideIndex + 1}/${slides.length}`
-              : ""
+              : ''
           }
 
-        </span>
+        </div>
 
       </div>
 
 
-      ${
-        slide.type === "VIDEO"
+      <div
+        class="viewer-content">
 
-          ? `
 
-            <video
-              class="feature-media"
-              autoplay
-              playsinline
-              muted
-            ></video>
+        ${
+          slide.type === 'VIDEO'
 
-          `
+            ? `
+              <video
+                class="viewer-media"
+                autoplay
+                playsinline
+                muted>
+              </video>
+            `
 
-          : `
+            : `
+              <img
+                class="viewer-media"
+                src="${slide.src || ''}"
+                alt="">
+            `
+        }
 
-            <img
-              class="feature-media"
-              src="${slide.src || ""}"
-              alt=""
-            >
 
-          `
-      }
+      </div>
 
 
       ${
@@ -536,12 +950,11 @@ function playSlide(
           ? `
 
             <div
-              class="feature-caption"
+              class="viewer-caption"
               style="
                 font-size:
-                  ${settings.captionSize}px
-              "
-            >
+                ${settings.captionSize}px;
+              ">
 
               ${escapeHtml(
                 item.caption
@@ -551,8 +964,9 @@ function playSlide(
 
           `
 
-          : ""
+          : ''
       }
+
 
     </section>
 
@@ -560,72 +974,41 @@ function playSlide(
 
 
   const video =
-    root.querySelector(
-      "video"
+    document.querySelector(
+      '.viewer-media'
     );
 
 
-  /* =====================================================
-     VÍDEO
-  ===================================================== */
-
-  if (video) {
+  if (
+    video &&
+    video.tagName ===
+      'VIDEO'
+  ) {
 
     video.src =
-      slide.src || "";
+      slide.src || '';
 
 
     video.play()
       .catch(() => {});
 
 
-    video.addEventListener(
-      "ended",
+    video.onended =
       () => {
 
-        playSlide(
+        showSlide(
           item,
           slides,
           slideIndex + 1
         );
 
-      }
-    );
-
-
-    /*
-      Segurança:
-      caso o vídeo não consiga
-      disparar ended.
-    */
-
-    video.addEventListener(
-      "error",
-      () => {
-
-        timer =
-          setTimeout(
-            () =>
-              playSlide(
-                item,
-                slides,
-                slideIndex + 1
-              ),
-            settings.time * 1000
-          );
-
-      }
-    );
+      };
 
 
     return;
 
   }
 
-
-  /* =====================================================
-     FOTO
-  ===================================================== */
 
   startProgress(
     settings.time
@@ -634,10 +1017,9 @@ function playSlide(
 
   timer =
     setTimeout(
-
       () => {
 
-        playSlide(
+        showSlide(
           item,
           slides,
           slideIndex + 1
@@ -646,123 +1028,172 @@ function playSlide(
       },
 
       settings.time * 1000
-
     );
 
 }
 
 
-/* =========================================================
-   FINALIZAR POST
-========================================================= */
+// ============================================================
+// VOLTAR PARA O PERFIL
+// ============================================================
 
-function finishFeature() {
+function returnToProfile() {
 
   clearTimeout(timer);
 
-  progress.style.width =
-    "0%";
+
+  currentIndex++;
 
 
   /*
-    Pequena pausa para
-    a transição parecer natural.
+    Quando termina todos os posts,
+    começa novamente pelo primeiro.
   */
 
-  setTimeout(() => {
+  if (
+    currentIndex >=
+    media.length
+  ) {
 
-    index =
-      (index + 1) %
-      media.length;
+    currentIndex = 0;
+
+  }
 
 
-    showProfile();
+  /*
+    O perfil é reconstruído,
+    mas o próximo post continua
+    sendo o alvo do cursor.
+  */
 
-  }, 600);
+  showProfile();
 
 }
 
 
-/* =========================================================
-   BARRA DE PROGRESSO
-========================================================= */
+// ============================================================
+// PROGRESSO
+// ============================================================
 
 function startProgress(
   seconds
 ) {
 
   progress.style.transition =
-    "none";
+    'none';
 
   progress.style.width =
-    "0%";
+    '0%';
 
 
-  requestAnimationFrame(() => {
+  requestAnimationFrame(
+    () => {
 
-    progress.style.transition =
-      `width ${seconds}s linear`;
+      progress.style.transition =
+        `width ${seconds}s linear`;
 
-    progress.style.width =
-      "100%";
+      progress.style.width =
+        '100%';
 
-  });
-
-}
-
-
-/* =========================================================
-   SEGURANÇA
-========================================================= */
-
-function escapeHtml(text) {
-
-  return String(text)
-    .replace(
-      /[&<>"']/g,
-
-      character => ({
-
-        "&":
-          "&amp;",
-
-        "<":
-          "&lt;",
-
-        ">":
-          "&gt;",
-
-        '"':
-          "&quot;",
-
-        "'":
-          "&#039;"
-
-      }[character])
-
-    );
+    }
+  );
 
 }
 
 
-/* =========================================================
-   TECLADO
-========================================================= */
+// ============================================================
+// NÚMEROS
+// ============================================================
+
+function formatNumber(
+  number
+) {
+
+  if (
+    number === undefined ||
+    number === null
+  ) {
+
+    return '—';
+
+  }
+
+
+  return Number(
+    number
+  ).toLocaleString(
+    'pt-BR'
+  );
+
+}
+
+
+// ============================================================
+// VAZIO
+// ============================================================
+
+function showEmpty() {
+
+  root.innerHTML = `
+
+    <div
+      class="tv-empty">
+
+      <strong>
+        Feed TV
+      </strong>
+
+      <span>
+        Conecte um Instagram
+        pelo painel.
+      </span>
+
+      <a href="/painel.html">
+        Abrir painel
+      </a>
+
+    </div>
+
+  `;
+
+}
+
+
+// ============================================================
+// ESPERA
+// ============================================================
+
+function wait(ms) {
+
+  return new Promise(
+    resolve =>
+      setTimeout(
+        resolve,
+        ms
+      )
+  );
+
+}
+
+
+// ============================================================
+// TECLADO
+// ============================================================
 
 document.addEventListener(
-  "keydown",
+  'keydown',
   event => {
 
     if (
       event.key ===
-      "ArrowRight"
+      'ArrowRight'
     ) {
 
-      clearTimeout(timer);
-
-      index =
-        (index + 1) %
-        media.length;
+      currentIndex =
+        Math.min(
+          currentIndex + 1,
+          media.length - 1
+        );
 
       showProfile();
 
@@ -771,18 +1202,14 @@ document.addEventListener(
 
     if (
       event.key ===
-      "ArrowLeft"
+      'ArrowLeft'
     ) {
 
-      clearTimeout(timer);
-
-      index =
-        (
-          index -
-          1 +
-          media.length
-        ) %
-        media.length;
+      currentIndex =
+        Math.max(
+          currentIndex - 1,
+          0
+        );
 
       showProfile();
 
@@ -791,7 +1218,7 @@ document.addEventListener(
 
     if (
       event.key.toLowerCase() ===
-      "f"
+      'f'
     ) {
 
       document.documentElement
@@ -803,19 +1230,22 @@ document.addEventListener(
 );
 
 
-/* =========================================================
-   INICIAR
-========================================================= */
+// ============================================================
+// INICIALIZAÇÃO
+// ============================================================
 
-loadInstagram();
+start();
 
 
-/*
-  Atualiza o conteúdo
-  periodicamente.
-*/
+// Atualiza conteúdo a cada 5 minutos
 
 setInterval(
-  loadInstagram,
+  async () => {
+
+    await loadProfile();
+
+    await loadMedia();
+
+  },
   5 * 60 * 1000
 );
