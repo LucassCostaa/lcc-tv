@@ -735,11 +735,6 @@ async function moveCursorToCurrentPost() {
       0.68;
 
 
-  /*
-    Posição inicial do cursor.
-    Ele começa longe do post.
-  */
-
   const currentLeft =
     parseFloat(
       cursor.style.left
@@ -771,11 +766,6 @@ async function moveCursorToCurrentPost() {
   await wait(150);
 
 
-  /*
-    AGORA O CURSOR REALMENTE
-    SE MOVE ATÉ O POST.
-  */
-
   cursor.style.transition =
     `
       left .75s
@@ -796,10 +786,6 @@ async function moveCursorToCurrentPost() {
 
   await wait(850);
 
-
-  /*
-    CLIQUE
-  */
 
   cursor.classList.add(
     'clicking'
@@ -863,11 +849,6 @@ function ensurePostVisible(
         0.18;
 
 
-      /*
-        Se já está visível,
-        não rola.
-      */
-
       if (
 
         top >=
@@ -888,10 +869,6 @@ function ensurePostVisible(
       let destination;
 
 
-      /*
-        Scroll para baixo
-      */
-
       if (
         top >
         visibleBottom
@@ -903,10 +880,6 @@ function ensurePostVisible(
             0.18;
 
       }
-
-      /*
-        Scroll para cima
-      */
 
       else {
 
@@ -1025,11 +998,6 @@ function showSlide(
   slides,
   slideIndex
 ) {
-
-  /*
-    Terminou o post.
-    Volta para o perfil.
-  */
 
   if (
     slideIndex >=
@@ -1178,9 +1146,9 @@ function showSlide(
     );
 
 
-  /*
-    REEL / VÍDEO
-  */
+  /* ========================================================
+     VÍDEO / REEL
+  ======================================================== */
 
   if (
 
@@ -1190,19 +1158,45 @@ function showSlide(
 
   ) {
 
-    video.src =
-      slide.src ||
-      '';
+
+    let videoFailed =
+      false;
 
 
-    video.play()
-      .catch(
-        () => {}
-      );
+    let fallbackTimer =
+      null;
 
 
-    video.onended =
+    /*
+      Função responsável por
+      pular o vídeo problemático.
+    */
+
+    const goNext =
       () => {
+
+        if (
+          videoFailed
+        ) {
+
+          return;
+
+        }
+
+
+        videoFailed =
+          true;
+
+
+        clearTimeout(
+          fallbackTimer
+        );
+
+
+        console.warn(
+          'Vídeo não pôde ser reproduzido. Pulando para o próximo conteúdo.'
+        );
+
 
         showSlide(
           item,
@@ -1213,14 +1207,171 @@ function showSlide(
       };
 
 
+    /*
+      ERRO DE CARREGAMENTO
+    */
+
+    video.onerror =
+      () => {
+
+        console.warn(
+          'Erro ao carregar vídeo na TV.'
+        );
+
+
+        goNext();
+
+      };
+
+
+    /*
+      VÍDEO CARREGOU
+    */
+
+    video.onloadeddata =
+      () => {
+
+        clearTimeout(
+          fallbackTimer
+        );
+
+
+        video.play()
+          .then(
+            () => {
+
+              console.log(
+                'Vídeo reproduzindo.'
+              );
+
+            }
+          )
+          .catch(
+            () => {
+
+              console.warn(
+                'A TV bloqueou a reprodução automática ou o vídeo é incompatível.'
+              );
+
+
+              goNext();
+
+            }
+          );
+
+      };
+
+
+    /*
+      VÍDEO TERMINOU
+    */
+
+    video.onended =
+      () => {
+
+        goNext();
+
+      };
+
+
+    /*
+      Define a URL depois
+      dos eventos.
+    */
+
+    video.src =
+      slide.src ||
+      '';
+
+
+    /*
+      Força o carregamento.
+    */
+
+    try {
+
+      video.load();
+
+    } catch (
+      error
+    ) {
+
+      console.warn(
+        'Não foi possível iniciar o carregamento do vídeo.'
+      );
+
+
+      goNext();
+
+      return;
+
+    }
+
+
+    /*
+      SEGURANÇA:
+
+      Algumas Smart TVs não
+      disparam corretamente
+      onerror/onloadeddata.
+
+      Depois de 5 segundos,
+      se o vídeo não estiver
+      realmente reproduzindo,
+      pula para o próximo.
+    */
+
+    fallbackTimer =
+      setTimeout(
+        () => {
+
+          if (
+            videoFailed
+          ) {
+
+            return;
+
+          }
+
+
+          const ready =
+            video.readyState >= 2;
+
+
+          const playing =
+            !video.paused &&
+            !video.ended;
+
+
+          if (
+            !ready ||
+            !playing
+          ) {
+
+            console.warn(
+              'Tempo limite do vídeo atingido. Pulando.'
+            );
+
+
+            goNext();
+
+          }
+
+        },
+
+        5000
+
+      );
+
+
     return;
 
   }
 
 
-  /*
-    FOTO
-  */
+  /* ========================================================
+     FOTO
+  ======================================================== */
 
   startProgress(
     settings.time
