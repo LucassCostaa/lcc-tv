@@ -8,19 +8,51 @@ let timer = null;
 
 let profileContainer = null;
 
-let returningToProfile = false;
+
+/* ============================================================
+   CONFIGURAÇÕES VINDAS DO PAINEL
+============================================================ */
+
+const urlParams =
+  new URLSearchParams(
+    window.location.search
+  );
 
 
 const settings = {
 
-  time: 8,
+  time:
+    Math.max(
+      1,
+      Number(
+        urlParams.get('time') || 10
+      )
+    ),
 
-  captions: true,
+  captions:
+    urlParams.get('captions') !== '0',
 
-  captionSize: 22
+  captionSize:
+    Math.max(
+      12,
+      Math.min(
+        48,
+        Number(
+          urlParams.get('captionSize') || 24
+        )
+      )
+    ),
+
+  orientation:
+    urlParams.get('orientation') ||
+    'landscape'
 
 };
 
+
+/* ============================================================
+   ELEMENTOS DA TV
+============================================================ */
 
 const root =
   document.getElementById(
@@ -43,32 +75,55 @@ const count =
   );
 
 
-// ============================================================
-// UTILITÁRIO
-// ============================================================
+/* ============================================================
+   ORIENTAÇÃO
+============================================================ */
 
-function escapeHtml(text) {
+if (
+  settings.orientation ===
+  'portrait'
+) {
 
-  return String(text || '')
-    .replace(
-      /[&<>"']/g,
-      character => ({
-
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#039;'
-
-      }[character])
-    );
+  document.body.classList.add(
+    'portrait'
+  );
 
 }
 
 
-// ============================================================
-// CARREGAR PERFIL
-// ============================================================
+/* ============================================================
+   UTILITÁRIO
+============================================================ */
+
+function escapeHtml(text) {
+
+  return String(
+    text || ''
+  ).replace(
+    /[&<>"']/g,
+
+    character => ({
+
+      '&': '&amp;',
+
+      '<': '&lt;',
+
+      '>': '&gt;',
+
+      '"': '&quot;',
+
+      "'": '&#039;'
+
+    }[character])
+
+  );
+
+}
+
+
+/* ============================================================
+   CARREGAR PERFIL
+============================================================ */
 
 async function loadProfile() {
 
@@ -110,9 +165,9 @@ async function loadProfile() {
 }
 
 
-// ============================================================
-// CARREGAR POSTS
-// ============================================================
+/* ============================================================
+   CARREGAR POSTS
+============================================================ */
 
 async function loadMedia() {
 
@@ -130,14 +185,15 @@ async function loadMedia() {
 
     media =
       (data.data || [])
-        .filter(item =>
-          [
-            'IMAGE',
-            'VIDEO',
-            'CAROUSEL_ALBUM'
-          ].includes(
-            item.media_type
-          )
+        .filter(
+          item =>
+            [
+              'IMAGE',
+              'VIDEO',
+              'CAROUSEL_ALBUM'
+            ].includes(
+              item.media_type
+            )
         );
 
 
@@ -158,9 +214,9 @@ async function loadMedia() {
 }
 
 
-// ============================================================
-// INICIAR
-// ============================================================
+/* ============================================================
+   INICIAR
+============================================================ */
 
 async function start() {
 
@@ -192,9 +248,9 @@ async function start() {
 }
 
 
-// ============================================================
-// PERFIL
-// ============================================================
+/* ============================================================
+   MOSTRAR PERFIL
+============================================================ */
 
 function showProfile() {
 
@@ -247,15 +303,15 @@ function showProfile() {
   root.innerHTML = `
 
     <section
-      class="instagram-screen"
-      id="instagramScreen">
+      class="instagram-screen">
+
 
       <div
         class="instagram-scroll"
         id="instagramScroll">
 
 
-        <!-- CABEÇALHO -->
+        <!-- PERFIL -->
 
         <header
           class="instagram-profile-header">
@@ -268,19 +324,25 @@ function showProfile() {
               avatar
 
                 ? `
+
                   <img
                     src="${avatar}"
                     alt="">
+
                 `
 
                 : `
+
                   <span>
+
                     ${escapeHtml(
                       username
                         .slice(0, 2)
                         .toUpperCase()
                     )}
+
                   </span>
+
                 `
             }
 
@@ -295,12 +357,18 @@ function showProfile() {
               class="instagram-name-row">
 
               <h1>
-                ${escapeHtml(name)}
+
+                ${escapeHtml(
+                  name
+                )}
+
               </h1>
 
               <span
                 class="verified-dot">
+
                 ✓
+
               </span>
 
             </div>
@@ -309,7 +377,9 @@ function showProfile() {
             <div
               class="instagram-username">
 
-              @${escapeHtml(username)}
+              @${escapeHtml(
+                username
+              )}
 
             </div>
 
@@ -318,24 +388,41 @@ function showProfile() {
               class="instagram-stats">
 
               <span>
+
                 <strong>
+
                   ${posts}
+
                 </strong>
+
                 publicações
+
               </span>
 
+
               <span>
+
                 <strong>
+
                   ${followers}
+
                 </strong>
+
                 seguidores
+
               </span>
 
+
               <span>
+
                 <strong>
+
                   ${following}
+
                 </strong>
+
                 seguindo
+
               </span>
 
             </div>
@@ -345,15 +432,20 @@ function showProfile() {
               bio
 
                 ? `
+
                   <div
                     class="instagram-bio">
 
-                    ${escapeHtml(bio)}
+                    ${escapeHtml(
+                      bio
+                    )}
 
                   </div>
+
                 `
 
                 : ''
+
             }
 
 
@@ -372,22 +464,30 @@ function showProfile() {
         </div>
 
 
-        <!-- BARRA DE NAVEGAÇÃO -->
+        <!-- ABAS -->
 
         <div
           class="instagram-tabs">
 
           <span
             class="active">
+
             ▦
+
           </span>
 
+
           <span>
+
             ▶
+
           </span>
 
+
           <span>
+
             ⌁
+
           </span>
 
         </div>
@@ -421,55 +521,49 @@ function showProfile() {
     `${currentIndex + 1} / ${media.length}`;
 
 
-  /*
-    Pequeno tempo para o perfil
-    aparecer antes do cursor.
-  */
-
   setTimeout(
-    () => moveCursorToCurrentPost(),
-    1100
+    () =>
+      moveCursorToCurrentPost(),
+    1000
   );
 
 }
 
 
-// ============================================================
-// DESTAQUES
-// ============================================================
+/* ============================================================
+   DESTAQUES
+============================================================ */
 
 function createHighlights() {
 
-  /*
-    A API atual usada no projeto
-    não entrega os destaques do
-    Instagram nesse fluxo.
-
-    Então deixamos a área visual
-    preparada para eles e usamos
-    alguns conteúdos recentes como
-    capas provisórias.
-
-    Depois podemos conectar uma
-    fonte específica de Highlights.
-  */
-
   const covers =
-    media.slice(0, 5);
+    media.slice(
+      0,
+      5
+    );
 
 
   const labels = [
+
     'Novidades',
+
     'Projetos',
+
     'Produtos',
+
     'Bastidores',
+
     'Clientes'
+
   ];
 
 
   return covers
     .map(
-      (item, index) => {
+      (
+        item,
+        index
+      ) => {
 
         const src =
           item.media_type ===
@@ -485,6 +579,7 @@ function createHighlights() {
           <div
             class="highlight">
 
+
             <div
               class="highlight-circle">
 
@@ -494,9 +589,13 @@ function createHighlights() {
 
             </div>
 
+
             <span>
+
               ${labels[index]}
+
             </span>
+
 
           </div>
 
@@ -509,15 +608,18 @@ function createHighlights() {
 }
 
 
-// ============================================================
-// GRID
-// ============================================================
+/* ============================================================
+   GRID DO INSTAGRAM
+============================================================ */
 
 function createGrid() {
 
   return media
     .map(
-      (item, index) => {
+      (
+        item,
+        index
+      ) => {
 
         const src =
           item.media_type ===
@@ -558,13 +660,18 @@ function createGrid() {
               type
 
                 ? `
+
                   <span
                     class="post-type">
+
                     ${type}
+
                   </span>
+
                 `
 
                 : ''
+
             }
 
 
@@ -579,14 +686,18 @@ function createGrid() {
 }
 
 
-// ============================================================
-// CURSOR
-// ============================================================
+/* ============================================================
+   CURSOR
+============================================================ */
 
 async function moveCursorToCurrentPost() {
 
-  if (!profileContainer) {
+  if (
+    !profileContainer
+  ) {
+
     return;
+
   }
 
 
@@ -603,11 +714,6 @@ async function moveCursorToCurrentPost() {
   }
 
 
-  /*
-    Se o post não estiver visível,
-    fazemos o scroll automático.
-  */
-
   await ensurePostVisible(
     post
   );
@@ -619,12 +725,65 @@ async function moveCursorToCurrentPost() {
 
   const x =
     rectangle.left +
-    rectangle.width * 0.68;
+    rectangle.width *
+      0.68;
 
 
   const y =
     rectangle.top +
-    rectangle.height * 0.68;
+    rectangle.height *
+      0.68;
+
+
+  /*
+    Posição inicial do cursor.
+    Ele começa longe do post.
+  */
+
+  const currentLeft =
+    parseFloat(
+      cursor.style.left
+    ) ||
+    window.innerWidth *
+      0.82;
+
+
+  const currentTop =
+    parseFloat(
+      cursor.style.top
+    ) ||
+    window.innerHeight *
+      0.82;
+
+
+  cursor.style.left =
+    `${currentLeft}px`;
+
+
+  cursor.style.top =
+    `${currentTop}px`;
+
+
+  cursor.style.display =
+    'block';
+
+
+  await wait(150);
+
+
+  /*
+    AGORA O CURSOR REALMENTE
+    SE MOVE ATÉ O POST.
+  */
+
+  cursor.style.transition =
+    `
+      left .75s
+      cubic-bezier(.2,.8,.2,1),
+
+      top .75s
+      cubic-bezier(.2,.8,.2,1)
+    `;
 
 
   cursor.style.left =
@@ -635,17 +794,12 @@ async function moveCursorToCurrentPost() {
     `${y}px`;
 
 
-  cursor.style.display =
-    'block';
+  await wait(850);
 
 
   /*
-    Pequena pausa como se a pessoa
-    estivesse movimentando o mouse.
+    CLIQUE
   */
-
-  await wait(750);
-
 
   cursor.classList.add(
     'clicking'
@@ -671,9 +825,9 @@ async function moveCursorToCurrentPost() {
 }
 
 
-// ============================================================
-// SCROLL
-// ============================================================
+/* ============================================================
+   SCROLL AUTOMÁTICO
+============================================================ */
 
 function ensurePostVisible(
   post
@@ -709,11 +863,19 @@ function ensurePostVisible(
         0.18;
 
 
+      /*
+        Se já está visível,
+        não rola.
+      */
+
       if (
+
         top >=
           visibleTop + margin &&
+
         bottom <=
           visibleBottom - margin
+
       ) {
 
         resolve();
@@ -726,26 +888,31 @@ function ensurePostVisible(
       let destination;
 
 
+      /*
+        Scroll para baixo
+      */
+
       if (
-        top <
-        visibleTop
+        top >
+        visibleBottom
       ) {
+
+        destination =
+          top -
+          container.clientHeight *
+            0.18;
+
+      }
+
+      /*
+        Scroll para cima
+      */
+
+      else {
 
         destination =
           Math.max(
             0,
-            top -
-            container.clientHeight *
-              0.18
-          );
-
-      } else {
-
-        destination =
-          Math.min(
-            container.scrollHeight -
-              container.clientHeight,
-
             top -
               container.clientHeight *
                 0.18
@@ -776,11 +943,13 @@ function ensurePostVisible(
 }
 
 
-// ============================================================
-// ABRIR POST
-// ============================================================
+/* ============================================================
+   ABRIR POST
+============================================================ */
 
-function openPost(item) {
+function openPost(
+  item
+) {
 
   clearTimeout(timer);
 
@@ -794,9 +963,12 @@ function openPost(item) {
 
 
   if (
+
     item.media_type ===
       'CAROUSEL_ALBUM' &&
+
     children.length
+
   ) {
 
     slides =
@@ -813,7 +985,9 @@ function openPost(item) {
         })
       );
 
-  } else {
+  }
+
+  else {
 
     slides = [
 
@@ -842,15 +1016,20 @@ function openPost(item) {
 }
 
 
-// ============================================================
-// SLIDE
-// ============================================================
+/* ============================================================
+   MOSTRAR POST
+============================================================ */
 
 function showSlide(
   item,
   slides,
   slideIndex
 ) {
+
+  /*
+    Terminou o post.
+    Volta para o perfil.
+  */
 
   if (
     slideIndex >=
@@ -877,27 +1056,36 @@ function showSlide(
       <div
         class="viewer-top">
 
+
         <div
           class="viewer-account">
+
 
           ${
             profile?.profile_picture_url
 
               ? `
+
                 <img
                   src="${profile.profile_picture_url}"
                   alt="">
+
               `
 
               : ''
+
           }
 
+
           <span>
+
             @${escapeHtml(
               profile?.username ||
               'instagram'
             )}
+
           </span>
+
 
         </div>
 
@@ -906,11 +1094,15 @@ function showSlide(
 
           ${
             slides.length > 1
+
               ? `${slideIndex + 1}/${slides.length}`
+
               : ''
+
           }
 
         </div>
+
 
       </div>
 
@@ -920,23 +1112,29 @@ function showSlide(
 
 
         ${
-          slide.type === 'VIDEO'
+          slide.type ===
+          'VIDEO'
 
             ? `
+
               <video
                 class="viewer-media"
                 autoplay
                 playsinline
                 muted>
               </video>
+
             `
 
             : `
+
               <img
                 class="viewer-media"
                 src="${slide.src || ''}"
                 alt="">
+
             `
+
         }
 
 
@@ -965,6 +1163,7 @@ function showSlide(
           `
 
           : ''
+
       }
 
 
@@ -979,18 +1178,27 @@ function showSlide(
     );
 
 
+  /*
+    REEL / VÍDEO
+  */
+
   if (
+
     video &&
     video.tagName ===
       'VIDEO'
+
   ) {
 
     video.src =
-      slide.src || '';
+      slide.src ||
+      '';
 
 
     video.play()
-      .catch(() => {});
+      .catch(
+        () => {}
+      );
 
 
     video.onended =
@@ -1010,6 +1218,10 @@ function showSlide(
   }
 
 
+  /*
+    FOTO
+  */
+
   startProgress(
     settings.time
   );
@@ -1017,6 +1229,7 @@ function showSlide(
 
   timer =
     setTimeout(
+
       () => {
 
         showSlide(
@@ -1027,15 +1240,17 @@ function showSlide(
 
       },
 
-      settings.time * 1000
+      settings.time *
+        1000
+
     );
 
 }
 
 
-// ============================================================
-// VOLTAR PARA O PERFIL
-// ============================================================
+/* ============================================================
+   VOLTAR PARA O PERFIL
+============================================================ */
 
 function returnToProfile() {
 
@@ -1044,11 +1259,6 @@ function returnToProfile() {
 
   currentIndex++;
 
-
-  /*
-    Quando termina todos os posts,
-    começa novamente pelo primeiro.
-  */
 
   if (
     currentIndex >=
@@ -1060,20 +1270,14 @@ function returnToProfile() {
   }
 
 
-  /*
-    O perfil é reconstruído,
-    mas o próximo post continua
-    sendo o alvo do cursor.
-  */
-
   showProfile();
 
 }
 
 
-// ============================================================
-// PROGRESSO
-// ============================================================
+/* ============================================================
+   PROGRESSO
+============================================================ */
 
 function startProgress(
   seconds
@@ -1081,6 +1285,7 @@ function startProgress(
 
   progress.style.transition =
     'none';
+
 
   progress.style.width =
     '0%';
@@ -1092,6 +1297,7 @@ function startProgress(
       progress.style.transition =
         `width ${seconds}s linear`;
 
+
       progress.style.width =
         '100%';
 
@@ -1101,9 +1307,9 @@ function startProgress(
 }
 
 
-// ============================================================
-// NÚMEROS
-// ============================================================
+/* ============================================================
+   FORMATAR NÚMEROS
+============================================================ */
 
 function formatNumber(
   number
@@ -1128,9 +1334,9 @@ function formatNumber(
 }
 
 
-// ============================================================
-// VAZIO
-// ============================================================
+/* ============================================================
+   TELA VAZIA
+============================================================ */
 
 function showEmpty() {
 
@@ -1139,18 +1345,29 @@ function showEmpty() {
     <div
       class="tv-empty">
 
+
       <strong>
+
         Feed TV
+
       </strong>
 
+
       <span>
+
         Conecte um Instagram
         pelo painel.
+
       </span>
 
-      <a href="/painel.html">
+
+      <a
+        href="/painel.html">
+
         Abrir painel
+
       </a>
+
 
     </div>
 
@@ -1159,26 +1376,28 @@ function showEmpty() {
 }
 
 
-// ============================================================
-// ESPERA
-// ============================================================
+/* ============================================================
+   ESPERA
+============================================================ */
 
-function wait(ms) {
+function wait(
+  milliseconds
+) {
 
   return new Promise(
     resolve =>
       setTimeout(
         resolve,
-        ms
+        milliseconds
       )
   );
 
 }
 
 
-// ============================================================
-// TECLADO
-// ============================================================
+/* ============================================================
+   TECLADO
+============================================================ */
 
 document.addEventListener(
   'keydown',
@@ -1195,6 +1414,7 @@ document.addEventListener(
           media.length - 1
         );
 
+
       showProfile();
 
     }
@@ -1210,6 +1430,7 @@ document.addEventListener(
           currentIndex - 1,
           0
         );
+
 
       showProfile();
 
@@ -1230,16 +1451,20 @@ document.addEventListener(
 );
 
 
-// ============================================================
-// INICIALIZAÇÃO
-// ============================================================
+/* ============================================================
+   INICIAR
+============================================================ */
 
 start();
 
 
-// Atualiza conteúdo a cada 5 minutos
+/*
+  Atualiza o conteúdo
+  a cada 5 minutos.
+*/
 
 setInterval(
+
   async () => {
 
     await loadProfile();
@@ -1247,5 +1472,7 @@ setInterval(
     await loadMedia();
 
   },
+
   5 * 60 * 1000
+
 );
