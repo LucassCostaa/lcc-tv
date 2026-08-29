@@ -1,157 +1,349 @@
 <!doctype html>
 <html lang="pt-BR">
+
 <head>
+
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1">
+
   <title>Feed TV • Painel</title>
-  <link rel="stylesheet" href="/style.css">
+
+  <link
+    rel="stylesheet"
+    href="/style.css">
+
 </head>
+
 
 <body class="app-shell">
 
+
+  <!-- ======================================================
+       SIDEBAR
+  ======================================================= -->
+
   <aside class="sidebar">
 
+
     <div class="brand">
+
       <div class="brand-mark">
+
         Feed <span>TV</span>
+
       </div>
-      <small>Seu Instagram em movimento.</small>
+
+
+      <small>
+
+        Seu Instagram em movimento.
+
+      </small>
+
     </div>
+
 
     <nav>
 
-      <a class="nav-item active" href="/painel.html">
-        ⌂ <span>Painel</span>
+
+      <a
+        class="nav-item active"
+        href="/painel.html">
+
+        ⌂
+
+        <span>
+          Painel
+        </span>
+
       </a>
 
-      <a class="nav-item" href="/">
-        ▣ <span>TV ao vivo</span>
+
+      <a
+        class="nav-item"
+        href="/">
+
+        ▣
+
+        <span>
+          TV ao vivo
+        </span>
+
       </a>
 
-      <a class="nav-item" href="#conteudos">
-        ▦ <span>Conteúdos</span>
+
+      <a
+        class="nav-item"
+        href="#conteudos">
+
+        ▦
+
+        <span>
+          Conteúdos
+        </span>
+
       </a>
 
-      <a class="nav-item locked" href="#playlists">
-        ☷ <span>Playlists</span>
-        <b>PRO</b>
+
+      <a
+        class="nav-item"
+        href="#playlists">
+
+        ☷
+
+        <span>
+          Playlists
+        </span>
+
+        <b>
+          PRO
+        </b>
+
       </a>
 
-      <a class="nav-item locked" href="#agendamentos">
-        ◷ <span>Agendamentos</span>
-        <b>PRO</b>
+
+      <a
+        class="nav-item"
+        href="#agendamentos">
+
+        ◷
+
+        <span>
+          Agendamentos
+        </span>
+
+        <b>
+          PRO
+        </b>
+
       </a>
 
-      <a class="nav-item locked" href="#tvs">
-        ▣ <span>Múltiplas TVs</span>
-        <b>PRO</b>
+
+      <a
+        class="nav-item"
+        href="#tvs">
+
+        ▣
+
+        <span>
+          Múltiplas TVs
+        </span>
+
+        <b>
+          PRO
+        </b>
+
       </a>
 
-      <a class="nav-item" href="#config">
-        ⚙ <span>Configurações</span>
+
+      <a
+        class="nav-item"
+        href="#config">
+
+        ⚙
+
+        <span>
+          Configurações
+        </span>
+
       </a>
 
-      <a class="nav-item" href="#planos">
-        ♛ <span>Planos</span>
+
+      <a
+        class="nav-item"
+        href="#planos">
+
+        ♛
+
+        <span>
+          Planos
+        </span>
+
       </a>
 
-      <a class="nav-item" href="#ajuda">
-        ? <span>Ajuda</span>
+
+      <a
+        class="nav-item"
+        href="#ajuda">
+
+        ?
+
+        <span>
+          Ajuda
+        </span>
+
       </a>
+
 
     </nav>
 
+
+    <!-- UPGRADE -->
+
     <div class="upgrade-card">
-      <strong>Desbloqueie o poder do plano PRO</strong>
+
+      <strong>
+
+        Plano PRO liberado
+
+      </strong>
+
 
       <p>
-        Mais layouts, playlists, agendamentos,
-        múltiplas TVs e muito mais.
+
+        Todos os recursos estão
+        liberados para teste.
+
       </p>
 
-      <button onclick="alert('A página de planos será adicionada na próxima etapa.')">
-        Ver planos
+
+      <button
+        type="button"
+        disabled>
+
+        PRO ATIVO
+
       </button>
+
     </div>
+
+
+    <!-- CONTA -->
 
     <div class="account-mini">
 
-      <div class="avatar" id="miniAvatar">
+
+      <div
+        class="avatar"
+        id="miniAvatar">
+
         L
+
       </div>
+
 
       <div>
-        <strong id="miniName">
+
+        <strong
+          id="miniName">
+
           Sua conta
+
         </strong>
 
+
         <small>
-          Plano START
+
+          Plano PRO
+
         </small>
+
       </div>
 
+
     </div>
+
 
     <button
       class="exit-btn"
       onclick="window.location.href='/'">
+
       ↪ Sair
+
     </button>
+
 
   </aside>
 
 
+
+  <!-- ======================================================
+       DASHBOARD
+  ======================================================= -->
+
   <main class="dashboard">
 
-    <!-- CABEÇALHO -->
+
+    <!-- BOAS-VINDAS -->
 
     <section class="welcome-card">
+
 
       <div>
 
         <span class="eyebrow">
+
           PAINEL DE CONTROLE
+
         </span>
 
+
         <h1>
+
           Bem-vindo ao Feed TV! 👋
+
         </h1>
 
+
         <p>
-          Conecte seu Instagram e transforme seu conteúdo
-          em uma experiência incrível na sua TV.
+
+          Transforme seu Instagram
+          em uma experiência incrível
+          para sua TV.
+
         </p>
 
       </div>
 
+
       <div class="plan-pill">
 
+
         <small>
+
           Plano atual
+
         </small>
 
+
         <strong>
-          START <i></i>
+
+          PRO
+
+          <i></i>
+
         </strong>
+
 
       </div>
 
+
       <button
         class="outline-btn"
-        onclick="alert('Upgrade será implementado na etapa de assinaturas.')">
+        type="button"
+        disabled>
 
-        Upgrade
+        PRO ATIVO
 
       </button>
+
 
     </section>
 
 
-    <!-- INSTAGRAM -->
+
+    <!-- ====================================================
+         INSTAGRAM
+    ===================================================== -->
 
     <section class="profile-card">
 
+
       <div class="profile-avatar-wrap">
+
 
         <div
           class="profile-avatar"
@@ -161,24 +353,37 @@
 
         </div>
 
+
         <div class="ig-badge">
+
           ◎
+
         </div>
+
 
       </div>
 
 
       <div class="profile-info">
 
+
         <div class="profile-title">
 
-          <h2 id="profileName">
+
+          <h2
+            id="profileName">
+
             Instagram
+
           </h2>
 
+
           <span class="connected">
+
             ● Conectado
+
           </span>
+
 
         </div>
 
@@ -194,42 +399,74 @@
 
         <div class="stats">
 
+
           <div>
-            <strong id="mediaCount">
+
+            <strong
+              id="mediaCount">
+
               —
+
             </strong>
 
+
             <span>
+
               publicações
+
             </span>
+
           </div>
 
+
           <div>
-            <strong>
+
+            <strong
+              id="followersCount">
+
               —
+
             </strong>
 
+
             <span>
+
               seguidores
+
             </span>
+
           </div>
+
 
           <div>
-            <strong>
+
+            <strong
+              id="followingCount">
+
               —
+
             </strong>
 
+
             <span>
+
               seguindo
+
             </span>
+
           </div>
+
 
         </div>
 
 
-        <small id="connectedAt">
+        <small
+          id="connectedAt">
+
           Conectado ao Feed TV
+
         </small>
+
 
       </div>
 
@@ -242,16 +479,22 @@
 
       </button>
 
+
     </section>
 
 
-    <!-- CONTEÚDOS -->
+
+    <!-- ====================================================
+         CONTEÚDOS
+    ===================================================== -->
 
     <section
       class="content-card"
       id="conteudos">
 
+
       <div class="tabs">
+
 
         <button
           class="tab active"
@@ -261,6 +504,7 @@
 
         </button>
 
+
         <button
           class="tab"
           data-filter="VIDEO">
@@ -268,6 +512,7 @@
           Reels
 
         </button>
+
 
         <button
           class="tab"
@@ -277,9 +522,13 @@
 
         </button>
 
+
         <span class="updated">
+
           ↻ Atualizado agora há pouco
+
         </span>
+
 
       </div>
 
@@ -288,94 +537,177 @@
         id="grid"
         class="content-grid">
 
+
         <div class="loading">
+
           Carregando conteúdos...
+
         </div>
 
+
       </div>
+
 
     </section>
 
 
-    <!-- COMO FUNCIONA -->
+
+    <!-- ====================================================
+         COMO FUNCIONA
+    ===================================================== -->
 
     <section class="how-card">
 
+
       <div class="section-title">
+
         COMO FUNCIONA NA TV
+
       </div>
 
 
       <div class="steps">
 
+
         <div class="step">
-          <b>1</b>
-          <strong>Perfil aberto na TV</strong>
+
+          <b>
+            1
+          </b>
+
+          <strong>
+            Perfil aberto na TV
+          </strong>
+
           <div class="mini-screen"></div>
+
         </div>
 
+
         <div class="step">
-          <b>2</b>
-          <strong>Cursor aparece</strong>
+
+          <b>
+            2
+          </b>
+
+          <strong>
+            Cursor aparece
+          </strong>
+
           <div class="mini-screen cursor-demo"></div>
+
         </div>
 
+
         <div class="step">
-          <b>3</b>
-          <strong>Clica no post</strong>
+
+          <b>
+            3
+          </b>
+
+          <strong>
+            Clica no post
+          </strong>
+
           <div class="mini-screen cursor-demo"></div>
+
         </div>
 
+
         <div class="step">
-          <b>4</b>
-          <strong>Post abre em destaque</strong>
+
+          <b>
+            4
+          </b>
+
+          <strong>
+            Post abre em destaque
+          </strong>
+
           <div class="mini-screen featured-demo"></div>
+
         </div>
 
+
         <div class="step">
-          <b>5</b>
-          <strong>Retorna ao perfil</strong>
+
+          <b>
+            5
+          </b>
+
+          <strong>
+            Retorna ao perfil
+          </strong>
+
           <div class="mini-screen"></div>
+
         </div>
 
+
         <div class="step">
-          <b>6</b>
-          <strong>Vai para o próximo</strong>
+
+          <b>
+            6
+          </b>
+
+          <strong>
+            Vai para o próximo
+          </strong>
+
           <div class="mini-screen cursor-demo"></div>
+
         </div>
+
 
       </div>
 
 
       <p class="how-footer">
-        ↻ Navegação automática e contínua pelos seus
-        posts, reels e carrosséis.
+
+        ↻ Navegação automática e contínua
+        pelos seus posts, reels e carrosséis.
+
       </p>
 
+
     </section>
+
 
   </main>
 
 
-  <!-- CONFIGURAÇÕES -->
+
+  <!-- ======================================================
+       CONFIGURAÇÕES
+  ======================================================= -->
 
   <aside
     class="settings-panel"
     id="config">
 
+
     <h2>
+
       CONFIGURAÇÕES DA TV
+
     </h2>
 
 
+
+    <!-- ORIENTAÇÃO -->
+
     <label>
+
       ORIENTAÇÃO
+
     </label>
 
 
     <div class="segmented">
 
+
       <button
+        type="button"
         class="selected"
         data-orientation="landscape">
 
@@ -383,120 +715,175 @@
 
       </button>
 
+
       <button
+        type="button"
         data-orientation="portrait">
 
         ▣ &nbsp; Vertical
 
       </button>
 
+
     </div>
 
 
+
+    <!-- EXPERIÊNCIA -->
+
     <label>
+
       EXPERIÊNCIA DE EXIBIÇÃO
+
     </label>
 
 
-    <button class="choice selected">
+    <button
+      type="button"
+      class="choice selected"
+      data-experience="instagram">
 
       Experiência Instagram
 
+
       <span>
-        PADRÃO ★
+
+        PRO
+
       </span>
 
     </button>
 
 
     <button
-      class="choice locked-choice"
-      onclick="lockedFeature('PLUS')">
+      type="button"
+      class="choice"
+      data-experience="mosaic">
 
       Mosaico
 
+
       <span>
-        PLUS 🔒
+
+        PRO
+
       </span>
 
     </button>
 
 
     <button
-      class="choice locked-choice"
-      onclick="lockedFeature('PLUS')">
+      type="button"
+      class="choice"
+      data-experience="presentation">
 
       Apresentação
 
+
       <span>
-        PLUS 🔒
+
+        PRO
+
       </span>
 
     </button>
 
 
+
+    <!-- ====================================================
+         LEGENDAS
+    ===================================================== -->
+
     <label>
+
       LEGENDAS
+
     </label>
 
 
     <div class="toggle-row">
 
+
       <span>
+
         Mostrar legendas
+
       </span>
+
 
       <input
         id="showCaptions"
         type="checkbox"
         checked>
 
+
     </div>
 
 
     <div class="slider-row">
 
+
       <span>
         A
       </span>
+
 
       <input
         id="captionSize"
         type="range"
-        min="16"
-        max="34"
+        min="12"
+        max="48"
         value="24">
+
 
       <span>
         A
       </span>
+
 
     </div>
 
 
     <div class="locked-line">
 
-      🔒 Posição da legenda
+      Posição da legenda
+
 
       <b>
-        PRO
+
+        PRO ATIVO
+
       </b>
 
     </div>
 
 
+
+    <!-- ====================================================
+         TEMPO
+    ===================================================== -->
+
     <label>
+
       TEMPO DE EXIBIÇÃO
+
     </label>
 
 
     <div class="time-options">
 
-      <button data-time="5">
-        5s
-      </button>
 
       <button
+        type="button"
+        data-time="5">
+
+        5s
+
+      </button>
+
+
+      <button
+        type="button"
         class="selected"
         data-time="10">
 
@@ -504,31 +891,57 @@
 
       </button>
 
-      <button data-time="15">
+
+      <button
+        type="button"
+        data-time="15">
+
         15s
+
       </button>
 
-      <button data-time="30">
+
+      <button
+        type="button"
+        data-time="30">
+
         30s
+
       </button>
+
 
     </div>
 
+
+
+    <!-- PREMIUM -->
 
     <div class="premium-box">
 
+
       <strong>
-        🔒 Mais recursos disponíveis
-        nos planos PLUS e PRO
+
+        ✓ Todos os recursos do PRO
+        estão liberados
+
       </strong>
 
+
       <small>
-        Desbloqueie layouts, playlists,
-        agendamentos e muito mais.
+
+        Ambiente de desenvolvimento.
+        Os bloqueios de plano serão
+        adicionados somente quando
+        o Feed TV for comercializado.
+
       </small>
+
 
     </div>
 
+
+
+    <!-- ABRIR TV -->
 
     <button
       class="open-tv"
@@ -538,32 +951,60 @@
 
     </button>
 
+
   </aside>
 
 
+
 <script>
+
+/* ============================================================
+   VARIÁVEIS
+============================================================ */
 
 let media = [];
 
 let activeFilter = 'all';
 
 
-async function loadDashboard(){
+/* ============================================================
+   CARREGAR PAINEL
+============================================================ */
 
-  try{
+async function loadDashboard() {
+
+  try {
+
 
     const status =
-      await fetch('/api/status')
-      .then(r => r.json());
+      await fetch(
+        '/api/status'
+      )
+      .then(
+        response =>
+          response.json()
+      );
 
 
-    if(!status.connected){
+    if (!status.connected) {
 
-      document.getElementById('grid').innerHTML =
-        '<div class="loading">' +
-        'Instagram não conectado. ' +
-        '<a href="/auth/instagram">Conectar agora</a>' +
-        '</div>';
+      document.getElementById(
+        'grid'
+      ).innerHTML = `
+
+        <div class="loading">
+
+          Instagram não conectado.
+
+          <a href="/auth/instagram">
+
+            Conectar agora
+
+          </a>
+
+        </div>
+
+      `;
 
       return;
 
@@ -571,14 +1012,13 @@ async function loadDashboard(){
 
 
     const username =
-      status.username || 'instagram';
+      status.username ||
+      'instagram';
 
 
-    document.getElementById(
-      'profileHandle'
-    ).textContent =
-      '@' + username;
-
+    /*
+      Nome
+    */
 
     document.getElementById(
       'profileName'
@@ -586,68 +1026,285 @@ async function loadDashboard(){
       username;
 
 
+    /*
+      @
+    */
+
+    document.getElementById(
+      'profileHandle'
+    ).textContent =
+      '@' + username;
+
+
+    /*
+      Conta lateral
+    */
+
     document.getElementById(
       'miniName'
     ).textContent =
       username;
 
 
+    /*
+      Inicial
+    */
+
     document.getElementById(
       'miniAvatar'
     ).textContent =
       username
-        .slice(0,1)
+        .slice(0, 1)
         .toUpperCase();
 
 
+    /*
+      Perfil
+    */
+
+    try {
+
+      const profile =
+        await fetch(
+          '/api/profile'
+        )
+        .then(
+          response =>
+            response.json()
+        );
+
+
+      if (
+        profile &&
+        profile.profile_picture_url
+      ) {
+
+        document.getElementById(
+          'profileAvatar'
+        ).innerHTML = `
+
+          <img
+            src="${profile.profile_picture_url}"
+            alt=""
+            style="
+              width:100%;
+              height:100%;
+              border-radius:50%;
+              object-fit:cover;
+            "
+          >
+
+        `;
+
+      }
+
+
+      if (
+        profile &&
+        profile.name
+      ) {
+
+        document.getElementById(
+          'profileName'
+        ).textContent =
+          profile.name;
+
+      }
+
+
+      if (
+        profile &&
+        profile.followers_count !==
+          undefined
+      ) {
+
+        document.getElementById(
+          'followersCount'
+        ).textContent =
+          Number(
+            profile.followers_count
+          ).toLocaleString(
+            'pt-BR'
+          );
+
+      }
+
+
+      if (
+        profile &&
+        profile.follows_count !==
+          undefined
+      ) {
+
+        document.getElementById(
+          'followingCount'
+        ).textContent =
+          Number(
+            profile.follows_count
+          ).toLocaleString(
+            'pt-BR'
+          );
+
+      }
+
+
+      if (
+        profile &&
+        profile.media_count !==
+          undefined
+      ) {
+
+        document.getElementById(
+          'mediaCount'
+        ).textContent =
+          Number(
+            profile.media_count
+          ).toLocaleString(
+            'pt-BR'
+          );
+
+      }
+
+
+    } catch (
+      profileError
+    ) {
+
+      console.warn(
+        'Perfil não disponível:',
+        profileError
+      );
+
+    }
+
+
+    /*
+      Publicações
+    */
+
     const data =
-      await fetch('/api/media?limit=50')
-      .then(r => r.json());
+      await fetch(
+        '/api/media?limit=100'
+      )
+      .then(
+        response =>
+          response.json()
+      );
 
 
-    media = data.data || [];
+    media =
+      data.data || [];
 
 
-    document.getElementById(
-      'mediaCount'
-    ).textContent =
-      media.length;
+    if (
+      !media.length
+    ) {
+
+      document.getElementById(
+        'grid'
+      ).innerHTML = `
+
+        <div class="loading">
+
+          Nenhum conteúdo encontrado.
+
+        </div>
+
+      `;
+
+      return;
+
+    }
+
+
+    /*
+      Caso a API não tenha
+      media_count, usamos a
+      quantidade carregada.
+    */
+
+    const mediaCount =
+      document.getElementById(
+        'mediaCount'
+      );
+
+
+    if (
+      mediaCount.textContent ===
+      '—'
+    ) {
+
+      mediaCount.textContent =
+        media.length;
+
+    }
 
 
     renderGrid();
 
-  }catch(err){
+
+  } catch (
+    error
+  ) {
+
+    console.error(
+      'Erro ao carregar painel:',
+      error
+    );
+
 
     document.getElementById(
       'grid'
-    ).innerHTML =
-      '<div class="loading">' +
-      'Não foi possível carregar os conteúdos.' +
-      '</div>';
+    ).innerHTML = `
+
+      <div class="loading">
+
+        Não foi possível carregar
+        os conteúdos.
+
+      </div>
+
+    `;
 
   }
 
 }
 
 
-function renderGrid(){
+/* ============================================================
+   GRID
+============================================================ */
+
+function renderGrid() {
+
 
   const items =
     activeFilter === 'all'
+
       ? media
+
       : media.filter(
-          x => x.media_type === activeFilter
+          item =>
+            item.media_type ===
+            activeFilter
         );
 
 
-  if(!items.length){
+  if (
+    !items.length
+  ) {
 
     document.getElementById(
       'grid'
-    ).innerHTML =
-      '<div class="loading">' +
-      'Nenhum conteúdo encontrado.' +
-      '</div>';
+    ).innerHTML = `
+
+      <div class="loading">
+
+        Nenhum conteúdo encontrado.
+
+      </div>
+
+    `;
 
     return;
 
@@ -656,104 +1313,430 @@ function renderGrid(){
 
   document.getElementById(
     'grid'
-  ).innerHTML = items.map(x => {
+  ).innerHTML =
 
-    const src =
-      x.media_type === 'VIDEO'
-        ? x.thumbnail_url
-        : x.media_url;
-
-
-    const type =
-      x.media_type === 'VIDEO'
-        ? 'REEL'
-        : x.media_type === 'CAROUSEL_ALBUM'
-          ? 'CARROSSEL'
-          : 'POST';
+    items
+      .map(
+        item => {
 
 
-    return `
+          const src =
+            item.media_type ===
+            'VIDEO'
 
-      <article class="content-item">
+              ? item.thumbnail_url
 
-        <div class="media-thumb">
+              : item.media_url;
 
-          <img
-            src="${src || ''}"
-            alt="">
 
-          <span class="type-badge">
-            ${type}
-          </span>
+          const type =
+            item.media_type ===
+            'VIDEO'
 
-        </div>
+              ? 'REEL'
 
-        <div class="content-meta">
+              : item.media_type ===
+                'CAROUSEL_ALBUM'
 
-          <strong>
-            ${new Date(x.timestamp)
-              .toLocaleDateString('pt-BR')}
-          </strong>
+                ? 'CARROSSEL'
 
-          <p>
-            ${escapeHtml(
-              (x.caption || '').slice(0,90)
-            )}
-          </p>
+                : 'POST';
 
-        </div>
 
-      </article>
+          return `
 
-    `;
+            <article
+              class="content-item">
 
-  }).join('');
+
+              <div
+                class="media-thumb">
+
+
+                <img
+                  src="${src || ''}"
+                  alt="">
+
+
+                <span
+                  class="type-badge">
+
+                  ${type}
+
+                </span>
+
+
+              </div>
+
+
+              <div
+                class="content-meta">
+
+
+                <strong>
+
+                  ${
+                    item.timestamp
+                      ? new Date(
+                          item.timestamp
+                        ).toLocaleDateString(
+                          'pt-BR'
+                        )
+                      : ''
+                  }
+
+                </strong>
+
+
+                <p>
+
+                  ${escapeHtml(
+                    (
+                      item.caption ||
+                      ''
+                    ).slice(
+                      0,
+                      90
+                    )
+                  )}
+
+                </p>
+
+
+              </div>
+
+
+            </article>
+
+          `;
+
+        }
+      )
+      .join('');
 
 }
 
 
-function escapeHtml(text){
+/* ============================================================
+   SEGURANÇA HTML
+============================================================ */
 
-  return text.replace(
+function escapeHtml(
+  text
+) {
+
+  return String(
+    text || ''
+  ).replace(
     /[&<>"']/g,
-    m => ({
-      '&':'&amp;',
-      '<':'&lt;',
-      '>':'&gt;',
-      '"':'&quot;',
-      "'":'&#039;'
-    }[m])
+
+    character => ({
+
+      '&':
+        '&amp;',
+
+      '<':
+        '&lt;',
+
+      '>':
+        '&gt;',
+
+      '"':
+        '&quot;',
+
+      "'":
+        '&#039;'
+
+    }[character])
+
   );
 
 }
 
 
-async function disconnectInstagram(){
+/* ============================================================
+   DESCONECTAR
+============================================================ */
+
+async function disconnectInstagram() {
 
   await fetch(
     '/api/disconnect',
     {
-      method:'POST'
+      method:
+        'POST'
     }
   );
 
-  loadDashboard();
+
+  window.location.reload();
 
 }
 
 
-function lockedFeature(plan){
+/* ============================================================
+   ORIENTAÇÃO
+============================================================ */
 
-  alert(
-    'Esse recurso estará disponível no plano ' +
-    plan +
-    '.'
+document
+  .querySelectorAll(
+    '[data-orientation]'
+  )
+  .forEach(
+    button => {
+
+      button.addEventListener(
+        'click',
+        () => {
+
+
+          document
+            .querySelectorAll(
+              '[data-orientation]'
+            )
+            .forEach(
+              item =>
+                item.classList
+                  .remove(
+                    'selected'
+                  )
+            );
+
+
+          button.classList.add(
+            'selected'
+          );
+
+        }
+      );
+
+    }
   );
 
+
+/* ============================================================
+   EXPERIÊNCIA
+============================================================ */
+
+document
+  .querySelectorAll(
+    '[data-experience]'
+  )
+  .forEach(
+    button => {
+
+      button.addEventListener(
+        'click',
+        () => {
+
+
+          document
+            .querySelectorAll(
+              '[data-experience]'
+            )
+            .forEach(
+              item =>
+                item.classList
+                  .remove(
+                    'selected'
+                  )
+            );
+
+
+          button.classList.add(
+            'selected'
+          );
+
+        }
+      );
+
+    }
+  );
+
+
+/* ============================================================
+   FILTROS
+============================================================ */
+
+document
+  .querySelectorAll(
+    '[data-filter]'
+  )
+  .forEach(
+    button => {
+
+      button.addEventListener(
+        'click',
+        () => {
+
+
+          document
+            .querySelectorAll(
+              '[data-filter]'
+            )
+            .forEach(
+              item =>
+                item.classList
+                  .remove(
+                    'active'
+                  )
+            );
+
+
+          button.classList.add(
+            'active'
+          );
+
+
+          activeFilter =
+            button.dataset.filter;
+
+
+          renderGrid();
+
+        }
+      );
+
+    }
+  );
+
+
+/* ============================================================
+   TEMPO
+============================================================ */
+
+document
+  .querySelectorAll(
+    '[data-time]'
+  )
+  .forEach(
+    button => {
+
+      button.addEventListener(
+        'click',
+        () => {
+
+
+          document
+            .querySelectorAll(
+              '[data-time]'
+            )
+            .forEach(
+              item =>
+                item.classList
+                  .remove(
+                    'selected'
+                  )
+            );
+
+
+          button.classList.add(
+            'selected'
+          );
+
+        }
+      );
+
+    }
+  );
+
+
+/* ============================================================
+   LEGENDA
+============================================================ */
+
+/*
+  Salva a preferência no navegador.
+*/
+
+const savedCaptions =
+  localStorage.getItem(
+    'feedtv_captions'
+  );
+
+
+const savedCaptionSize =
+  localStorage.getItem(
+    'feedtv_captionSize'
+  );
+
+
+if (
+  savedCaptions !==
+  null
+) {
+
+  document.getElementById(
+    'showCaptions'
+  ).checked =
+    savedCaptions === '1';
+
 }
 
 
-function openTV(){
+if (
+  savedCaptionSize !==
+  null
+) {
+
+  document.getElementById(
+    'captionSize'
+  ).value =
+    savedCaptionSize;
+
+}
+
+
+/*
+  Mostrar / esconder
+*/
+
+document
+  .getElementById(
+    'showCaptions'
+  )
+  .addEventListener(
+    'change',
+    function() {
+
+      localStorage.setItem(
+        'feedtv_captions',
+        this.checked
+          ? '1'
+          : '0'
+      );
+
+    }
+  );
+
+
+/*
+  Tamanho
+*/
+
+document
+  .getElementById(
+    'captionSize'
+  )
+  .addEventListener(
+    'input',
+    function() {
+
+      localStorage.setItem(
+        'feedtv_captionSize',
+        this.value
+      );
+
+    }
+  );
+
+
+/* ============================================================
+   ABRIR TV
+============================================================ */
+
+function openTV() {
+
 
   const orientation =
     document
@@ -761,19 +1744,24 @@ function openTV(){
         '[data-orientation].selected'
       )
       ?.dataset.orientation
-      || 'landscape';
+      ||
+      'landscape';
 
 
   const showCaptions =
-    document.getElementById(
-      'showCaptions'
-    ).checked;
+    document
+      .getElementById(
+        'showCaptions'
+      )
+      .checked;
 
 
   const captionSize =
-    document.getElementById(
-      'captionSize'
-    ).value;
+    document
+      .getElementById(
+        'captionSize'
+      )
+      .value;
 
 
   const time =
@@ -782,14 +1770,41 @@ function openTV(){
         '[data-time].selected'
       )
       ?.dataset.time
-      || '10';
+      ||
+      '10';
+
+
+  const experience =
+    document
+      .querySelector(
+        '[data-experience].selected'
+      )
+      ?.dataset.experience
+      ||
+      'instagram';
 
 
   const url =
+
     `/?orientation=${orientation}` +
-    `&captions=${showCaptions ? '1' : '0'}` +
-    `&captionSize=${captionSize}` +
-    `&time=${time}`;
+
+    `&captions=${
+      showCaptions
+        ? '1'
+        : '0'
+    }` +
+
+    `&captionSize=${
+      captionSize
+    }` +
+
+    `&time=${
+      time
+    }` +
+
+    `&experience=${
+      experience
+    }`;
 
 
   window.open(
@@ -800,85 +1815,15 @@ function openTV(){
 }
 
 
-document
-  .querySelectorAll('[data-filter]')
-  .forEach(btn => {
-
-    btn.addEventListener(
-      'click',
-      () => {
-
-        document
-          .querySelectorAll('[data-filter]')
-          .forEach(b =>
-            b.classList.remove('active')
-          );
-
-
-        btn.classList.add('active');
-
-
-        activeFilter =
-          btn.dataset.filter;
-
-
-        renderGrid();
-
-      }
-    );
-
-  });
-
-
-document
-  .querySelectorAll('[data-orientation]')
-  .forEach(btn => {
-
-    btn.addEventListener(
-      'click',
-      () => {
-
-        document
-          .querySelectorAll('[data-orientation]')
-          .forEach(b =>
-            b.classList.remove('selected')
-          );
-
-
-        btn.classList.add('selected');
-
-      }
-    );
-
-  });
-
-
-document
-  .querySelectorAll('[data-time]')
-  .forEach(btn => {
-
-    btn.addEventListener(
-      'click',
-      () => {
-
-        document
-          .querySelectorAll('[data-time]')
-          .forEach(b =>
-            b.classList.remove('selected')
-          );
-
-
-        btn.classList.add('selected');
-
-      }
-    );
-
-  });
-
+/* ============================================================
+   INICIAR
+============================================================ */
 
 loadDashboard();
 
 </script>
 
+
 </body>
+
 </html>
