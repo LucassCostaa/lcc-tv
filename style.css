@@ -2280,80 +2280,12 @@ grid-template-columns:
 
 }
 /* =========================================================
-FEED TV — CORREÇÃO DE TELA CHEIA PARA SMART TV
-Garante que o palco ocupe 100% do navegador da TV.
+   FEED TV — EXPERIÊNCIA HORIZONTAL / SMART TV
+   Feed em tela cheia + grade automática + viewer com fundo
+   desfocado, sem distorcer fotos ou vídeos.
 ========================================================= */
 
-html,
-body {
-width: 100%;
-height: 100%;
-min-width: 100%;
-min-height: 100%;
-margin: 0;
-padding: 0;
-}
-
-body.tv-page {
-width: 100%;
-height: 100%;
-min-width: 100%;
-min-height: 100%;
-margin: 0;
-padding: 0;
-overflow: hidden;
-}
-
-.tv-page #tvStage {
-position: fixed !important;
-top: 0 !important;
-left: 0 !important;
-right: auto !important;
-bottom: auto !important;
-width: 100vw !important;
-height: 100vh !important;
-min-width: 100vw !important;
-min-height: 100vh !important;
-max-width: none !important;
-max-height: none !important;
-margin: 0 !important;
-padding: 0 !important;
-overflow: hidden !important;
-}
-
-.tv-page .instagram-screen {
-position: fixed !important;
-top: 0 !important;
-left: 0 !important;
-width: 100vw !important;
-height: 100vh !important;
-min-width: 100vw !important;
-min-height: 100vh !important;
-margin: 0 !important;
-padding: 0 !important;
-}
-
-.tv-page .instagram-scroll {
-width: 92vw !important;
-max-width: 1500px !important;
-height: 100vh !important;
-min-height: 100vh !important;
-}
-
-/* Evita que o navegador da Smart TV reduza o conteúdo do palco */
-.tv-page,
-.tv-page #tvStage,
-.tv-page #tvRoot,
-.tv-page .instagram-screen {
-box-sizing: border-box;
-}
-/* =========================================================
-   FEED TV — SMART TV / TELA CHEIA / PERFORMANCE
-   Mantém o layout atual e otimiza apenas a reprodução na TV.
-========================================================= */
-
-html,
-body {
+html, body {
   width: 100%;
   height: 100%;
   min-width: 100%;
@@ -2370,422 +2302,338 @@ body.tv-page {
   margin: 0;
   padding: 0;
   overflow: hidden;
+  background: #000;
 }
-
-/* =========================================================
-   PALCO DA TV
-========================================================= */
 
 .tv-page #tvStage {
   position: fixed !important;
-
-  top: 0 !important;
-  left: 0 !important;
-  right: auto !important;
-  bottom: auto !important;
-
+  inset: 0 !important;
   width: 100vw !important;
   height: 100vh !important;
-
   min-width: 100vw !important;
   min-height: 100vh !important;
-
   max-width: none !important;
   max-height: none !important;
-
   margin: 0 !important;
   padding: 0 !important;
-
   overflow: hidden !important;
-
+  background: #000 !important;
   box-sizing: border-box !important;
 }
-
-/* =========================================================
-   TELA INSTAGRAM
-========================================================= */
-
-.tv-page .instagram-screen {
-  position: fixed !important;
-
-  top: 0 !important;
-  left: 0 !important;
-
-  width: 100vw !important;
-  height: 100vh !important;
-
-  min-width: 100vw !important;
-  min-height: 100vh !important;
-
-  margin: 0 !important;
-  padding: 0 !important;
-
-  box-sizing: border-box !important;
-}
-
-/* =========================================================
-   SCROLL DO FEED
-   Mantém o comportamento atual.
-========================================================= */
-
-.tv-page .instagram-scroll {
-  width: 92vw !important;
-  max-width: 1500px !important;
-
-  height: 100vh !important;
-  min-height: 100vh !important;
-
-  box-sizing: border-box !important;
-}
-
-/* =========================================================
-   ROOT DA TV
-========================================================= */
 
 .tv-page #tvRoot {
   position: fixed !important;
-
-  top: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  bottom: 0 !important;
-
+  inset: 0 !important;
   width: 100vw !important;
   height: 100vh !important;
-
   min-width: 100vw !important;
   min-height: 100vh !important;
-
   margin: 0 !important;
   padding: 0 !important;
-
   box-sizing: border-box !important;
 }
 
-/* =========================================================
-   POST ABERTO — TELA INTEIRA
-========================================================= */
+.tv-page .instagram-screen {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  min-width: 100vw !important;
+  min-height: 100vh !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: stretch !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+}
+
+.tv-page .instagram-scroll {
+  width: 100vw !important;
+  max-width: none !important;
+  height: 100vh !important;
+  min-height: 100vh !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  padding: 5vh 3vw 10vh !important;
+  box-sizing: border-box !important;
+  scrollbar-width: none !important;
+  scroll-behavior: smooth !important;
+}
+
+.tv-page .instagram-scroll::-webkit-scrollbar {
+  display: none !important;
+}
+
+.tv-page .instagram-profile-header,
+.tv-page .instagram-highlights {
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* GRADE AUTOMÁTICA */
+
+.tv-page .instagram-grid {
+  width: 100% !important;
+  max-width: 1800px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
+  gap: 12px !important;
+  padding-top: 15px !important;
+  box-sizing: border-box !important;
+}
+
+.tv-page .instagram-post {
+  position: relative !important;
+  width: 100% !important;
+  aspect-ratio: 1 / 1 !important;
+  overflow: hidden !important;
+  background: #111 !important;
+  cursor: none !important;
+  box-sizing: border-box !important;
+  backface-visibility: hidden !important;
+}
+
+.tv-page .instagram-post img {
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+  object-fit: cover !important;
+  backface-visibility: hidden !important;
+}
+
+.tv-page .instagram-post.active {
+  transform: scale(1.03) !important;
+  box-shadow:
+    0 0 0 4px var(--green),
+    0 0 22px rgba(124, 255, 47, .30) !important;
+  z-index: 5 !important;
+}
+
+/* VIEWER COM FEED DESFOCADO ATRÁS */
 
 .tv-page .instagram-post-viewer {
   position: fixed !important;
-
-  top: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  bottom: 0 !important;
-
+  inset: 0 !important;
   width: 100vw !important;
   height: 100vh !important;
-
   min-width: 100vw !important;
   min-height: 100vh !important;
-
   margin: 0 !important;
   padding: 0 !important;
-
   display: flex !important;
   flex-direction: column !important;
-
   align-items: stretch !important;
   justify-content: stretch !important;
-
   overflow: hidden !important;
-
-  background: #000 !important;
-
+  background: rgba(0, 0, 0, .48) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
   z-index: 200 !important;
-
   box-sizing: border-box !important;
-
-  /*
-     Animação mais leve para processadores
-     de Smart TV.
-  */
-  animation: tvPostOpen .22s ease-out !important;
+  animation: tvViewerOpen .22s ease-out !important;
 }
 
-/* =========================================================
-   ANIMAÇÃO DO POST
-========================================================= */
-
-@keyframes tvPostOpen {
-
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
-
+@keyframes tvViewerOpen {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
-
-/* =========================================================
-   CONTEÚDO DO POST ABERTO
-========================================================= */
 
 .tv-page .instagram-post-viewer .viewer-content {
   position: absolute !important;
-
-  top: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  bottom: 0 !important;
-
+  inset: 0 !important;
   width: 100vw !important;
   height: 100vh !important;
-
   min-width: 100vw !important;
   min-height: 100vh !important;
-
   margin: 0 !important;
   padding: 0 !important;
-
   display: flex !important;
-
   align-items: center !important;
   justify-content: center !important;
-
   box-sizing: border-box !important;
-
   overflow: hidden !important;
+  z-index: 10 !important;
 }
 
-/* =========================================================
-   IMAGEM ABERTA
-========================================================= */
+/* MÍDIA ABERTA — SEM DISTORÇÃO */
 
 .tv-page .instagram-post-viewer .viewer-media {
-
   display: block !important;
-
   position: relative !important;
-
   top: auto !important;
   left: auto !important;
-
-  margin: 0 auto !important;
-
   width: auto !important;
   height: auto !important;
-
-  max-width: 88vw !important;
-  max-height: 82vh !important;
-
+  max-width: 86vw !important;
+  max-height: 80vh !important;
+  margin: 0 auto !important;
   object-fit: contain !important;
-
   transform: none !important;
-
-  border-radius: 5px !important;
-
-  /*
-     Sombra reduzida para aliviar a GPU
-     da Smart TV sem alterar a aparência
-     de forma perceptível.
-  */
-  box-shadow:
-    0 12px 35px rgba(0, 0, 0, .65) !important;
-
+  border-radius: 6px !important;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, .65) !important;
   flex-shrink: 0 !important;
+  z-index: 20 !important;
 }
-
-/* =========================================================
-   VÍDEO / REELS
-========================================================= */
 
 .tv-page .instagram-post-viewer video.viewer-media {
-
   display: block !important;
-
   position: relative !important;
-
   top: auto !important;
   left: auto !important;
-
-  margin: 0 auto !important;
-
   width: auto !important;
   height: auto !important;
-
-  max-width: 88vw !important;
-  max-height: 82vh !important;
-
+  max-width: 86vw !important;
+  max-height: 80vh !important;
+  margin: 0 auto !important;
   object-fit: contain !important;
-
-  transform: none !important;
-
-  border-radius: 5px !important;
-
   background: #000 !important;
-
-  box-shadow:
-    0 12px 35px rgba(0, 0, 0, .65) !important;
-
+  border-radius: 6px !important;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, .65) !important;
   flex-shrink: 0 !important;
+  z-index: 20 !important;
 }
 
-/* =========================================================
-   VÍDEOS VERTICAIS
-   Garante que o Reel fique centralizado.
-========================================================= */
-
-.tv-page .instagram-post-viewer video {
-
-  max-width: 88vw !important;
-  max-height: 82vh !important;
-
-  object-fit: contain !important;
-
-  margin-left: auto !important;
-  margin-right: auto !important;
-}
-
-/* =========================================================
-   CABEÇALHO DO POST ABERTO
-========================================================= */
+/* TOPO DO POST */
 
 .tv-page .instagram-post-viewer .viewer-top {
-
   position: fixed !important;
-
   top: 0 !important;
   left: 0 !important;
   right: 0 !important;
-
   width: 100vw !important;
-
   height: 11vh !important;
-
-  z-index: 220 !important;
-
+  padding: 2vh 4vw !important;
   box-sizing: border-box !important;
-
-  padding:
-    2vh
-    4vw !important;
-
   display: flex !important;
-
   align-items: center !important;
   justify-content: space-between !important;
+  z-index: 50 !important;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, .35),
+    transparent
+  ) !important;
 }
 
-/* =========================================================
-   CONTA DO POST
-========================================================= */
-
 .tv-page .instagram-post-viewer .viewer-account {
-
   display: flex !important;
-
   align-items: center !important;
-
   gap: 12px !important;
 }
 
-/* =========================================================
-   FOTO DO PERFIL NO VISUALIZADOR
-========================================================= */
-
 .tv-page .instagram-post-viewer .viewer-account img {
-
   width: 42px !important;
   height: 42px !important;
-
   border-radius: 50% !important;
-
   object-fit: cover !important;
-
   flex-shrink: 0 !important;
 }
 
-/* =========================================================
-   LEGENDA
-========================================================= */
+/* LEGENDA */
 
 .tv-page .instagram-post-viewer .viewer-caption {
-
   position: fixed !important;
-
   left: 5vw !important;
   right: 5vw !important;
   bottom: 0 !important;
-
   width: auto !important;
-
-  z-index: 220 !important;
-
-  box-sizing: border-box !important;
-
   max-height: 25vh !important;
-
+  padding: 7vh 3vw 2vh !important;
+  box-sizing: border-box !important;
   overflow: hidden !important;
+  z-index: 50 !important;
+  background: linear-gradient(
+    transparent,
+    rgba(0, 0, 0, .95)
+  ) !important;
 }
 
-/* =========================================================
-   CURSOR
-========================================================= */
+/* CONTADOR */
 
-.tv-page .fake-cursor {
-
+.tv-page .tv-count {
   position: fixed !important;
-
-  z-index: 500 !important;
-
+  left: 3vw !important;
+  right: auto !important;
+  bottom: 3vh !important;
+  z-index: 100 !important;
+  color: rgba(255, 255, 255, .45) !important;
+  font-size: 12px !important;
   pointer-events: none !important;
 }
 
-/* =========================================================
-   MARCA
-========================================================= */
+/* @FEED TV */
 
 .tv-page .feed-watermark {
-
   position: fixed !important;
-
-  z-index: 500 !important;
-
+  left: auto !important;
+  right: 3vw !important;
+  bottom: 3vh !important;
+  z-index: 100 !important;
+  color: white !important;
+  opacity: .28 !important;
+  font-size: clamp(11px, .9vw, 16px) !important;
+  font-weight: 600 !important;
+  letter-spacing: .3px !important;
   pointer-events: none !important;
 }
 
-/* =========================================================
-   PERFORMANCE — SMART TV
-   Apenas ajustes que não alteram o layout.
-========================================================= */
+/* PROGRESSO */
 
-/*
-   Evita que elementos fora da tela sejam
-   recalculados desnecessariamente.
-*/
-
-.tv-page .instagram-post {
-  backface-visibility: hidden;
+.tv-page .tv-progress {
+  left: 3vw !important;
+  right: 3vw !important;
+  bottom: 1.4vh !important;
+  z-index: 90 !important;
 }
 
-/*
-   Reduz o peso da sombra do post selecionado,
-   mantendo o destaque verde.
-*/
+/* CURSOR */
 
-.tv-page .instagram-post.active {
-
-  box-shadow:
-    0 0 0 4px var(--green),
-    0 0 22px rgba(124, 255, 47, .28) !important;
+.tv-page .fake-cursor {
+  position: fixed !important;
+  z-index: 500 !important;
+  pointer-events: none !important;
 }
 
-/*
-   Mantém o destaque visual sem criar
-   uma animação pesada.
-*/
+/* PERFORMANCE */
 
-.tv-page .instagram-post.active {
-  transform: scale(1.03);
+.tv-page .instagram-post,
+.tv-page .instagram-post img,
+.tv-page .instagram-post-viewer,
+.tv-page .viewer-media {
+  backface-visibility: hidden !important;
 }
 
-/*
-   Evita problemas de dimensionamento.
-*/
+.tv-page .instagram-screen {
+  user-select: none !important;
+  -webkit-user-select: none !important;
+}
+
+/* TELAS VERTICAIS */
+
+@media (max-aspect-ratio: 1/1) {
+  .tv-page .instagram-scroll {
+    width: 100vw !important;
+    padding: 4vh 5vw 10vh !important;
+  }
+
+  .tv-page .instagram-grid {
+    max-width: none !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+  }
+
+  .tv-page .instagram-post-viewer .viewer-media,
+  .tv-page .instagram-post-viewer video.viewer-media {
+    max-width: 88vw !important;
+    max-height: 80vh !important;
+  }
+}
+
+/* DIMENSIONAMENTO */
 
 .tv-page,
 .tv-page #tvStage,
@@ -2793,10 +2641,7 @@ body.tv-page {
 .tv-page .instagram-screen,
 .tv-page .instagram-post-viewer,
 .tv-page .instagram-post-viewer .viewer-content {
-
   box-sizing: border-box !important;
 }
 
-/* =========================================================
-   FIM — SMART TV
-========================================================= */
+/* FIM */
